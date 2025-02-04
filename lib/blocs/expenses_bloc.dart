@@ -11,7 +11,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     on<LoadExpense>((event, emit) async {
       emit(ExpensesState(expense: state.expense, isLoading: true));
       final expense = await dbHelper.getExpenses();
-      emit(ExpensesState(expense: expense, isLoading: false));
+      emit(ExpensesState(expense: expense));
     });
 
     on<AddExpense>((event, emit) async {

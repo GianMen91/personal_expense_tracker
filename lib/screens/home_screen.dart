@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_expense_tracker/blocs/expenses_bloc.dart';
@@ -19,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Text("Total Expenses: 200 \€"),
+          Text("Total Expenses: 200 €"),
           Expanded(
             child: BlocBuilder<ExpensesBloc, ExpensesState>(
               builder: (context, state) {

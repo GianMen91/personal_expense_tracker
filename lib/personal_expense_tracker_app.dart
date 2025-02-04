@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'home_Screen.dart';
+import 'package:personal_expense_tracker/screens/home_screen.dart';
 
 class PersonalExpenseTrackerApp extends StatelessWidget {
   const PersonalExpenseTrackerApp({super.key});
