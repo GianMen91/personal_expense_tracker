@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'expense.dart';
+import '../models/expense.dart';
 
 class ExpenseCard extends StatelessWidget {
   final Expense expense;

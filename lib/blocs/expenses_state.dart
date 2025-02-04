@@ -1,4 +1,4 @@
-import 'expense.dart';
+import '../models/expense.dart';
 
 class ExpensesState {
   final List<Expense> expense;

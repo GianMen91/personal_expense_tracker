@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/new_expense_screen.dart';
+import 'package:personal_expense_tracker/screens/new_expense_screen.dart';
 
 class CategorySelectionScreen extends StatelessWidget {
   const CategorySelectionScreen({super.key});
@@ -99,11 +99,11 @@ class CategorySelectionScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryItem(
-      BuildContext context, {
-        required IconData icon,
-        required String title,
-        required Color color,
-      }) {
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required Color color,
+  }) {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: color,

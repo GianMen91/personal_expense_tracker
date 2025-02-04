@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:personal_expense_tracker/expenses_event.dart';
-import 'package:personal_expense_tracker/expenses_state.dart';
+import 'package:personal_expense_tracker/blocs/expenses_event.dart';
+import 'package:personal_expense_tracker/blocs/expenses_state.dart';
 
-import 'databse_helper.dart';
+import '../repositories/database_helper.dart';
 
 class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   final DatabaseHelper dbHelper;

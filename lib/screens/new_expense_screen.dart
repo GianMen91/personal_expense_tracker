@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'expense.dart';
-import 'expenses_bloc.dart';
-import 'expenses_event.dart';
+import '../blocs/expenses_event.dart';
+import '../models/expense.dart';
+import '../blocs/expenses_bloc.dart';
 
 import 'package:intl/intl.dart';
 

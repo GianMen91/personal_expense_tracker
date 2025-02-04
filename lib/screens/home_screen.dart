@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:personal_expense_tracker/expense_card.dart';
-import 'package:personal_expense_tracker/expenses_bloc.dart';
-import 'package:personal_expense_tracker/expenses_state.dart';
+import 'package:personal_expense_tracker/blocs/expenses_bloc.dart';
+import 'package:personal_expense_tracker/blocs/expenses_state.dart';
 
+import '../widgets/expense_card.dart';
 import 'category_selection_screen.dart';
 import 'expense_detail_screen.dart';
 
