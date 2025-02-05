@@ -60,7 +60,7 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
   }
 
   bool get _isFormValid {
-    if (_costController.text == null || _costController.text.trim().isEmpty) {
+    if (_costController.text.trim().isEmpty) {
       return false;
     }
     final number = double.tryParse(_costController.text.replaceAll(',', '.'));
@@ -130,14 +130,17 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
             child: TextFormField(
               controller: _costController,
               textAlign: TextAlign.center,
-              keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*[.,]?\d*'))],
+              keyboardType:
+                  TextInputType.numberWithOptions(decimal: true, signed: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*[.,]?\d*'))
+              ],
               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               decoration: const InputDecoration(
                 hintText: "0",
                 border: InputBorder.none,
               ),
-               validator: (value) {
+              validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter a cost';
                 }
