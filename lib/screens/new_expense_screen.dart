@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,8 +8,10 @@ import '../blocs/expenses_bloc.dart';
 
 import 'package:intl/intl.dart';
 
+import '../models/expense_category.dart';
+
 class NewExpenseScreen extends StatefulWidget {
-  final String category;
+  final ExpenseCategory category;
 
   const NewExpenseScreen({
     super.key,
@@ -60,7 +63,6 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Expense'),
-        backgroundColor: Colors.red,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -84,18 +86,12 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.blue,
-                  child: const Icon(Icons.flight, color: Colors.white),
-                ),
-                const SizedBox(width: 16),
-                Text(
-                  widget.category,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ],
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: widget.category.color,
+                child: Icon(widget.category.icon, color: Colors.white),
+              ),
+              title: Text(widget.category.title),
             ),
             const SizedBox(height: 24),
             _buildInputRow(
@@ -127,23 +123,13 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
             const SizedBox(height: 32),
             Row(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         final expense = Expense(
-                          category: widget.category,
+                          category: widget.category.title,
                           description: _descriptionController.text,
                           cost: double.tryParse(_costController.text) ?? 0.0,
                           date: _selectedDate,

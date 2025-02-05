@@ -132,7 +132,7 @@ class HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NewExpenseScreen(category: category.title),
+            builder: (context) => NewExpenseScreen(category: category),
           ),
         );
       },
