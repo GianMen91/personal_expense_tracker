@@ -1,28 +1,16 @@
 import 'package:flutter/material.dart';
-
-import '../constants.dart';
 import '../models/expense.dart';
+import '../models/expense_categories.dart';
 
 class ExpenseCard extends StatelessWidget {
   final Expense expense;
 
   const ExpenseCard({super.key, required this.expense});
 
-  IconData getIconForCategory(String category) {
-    switch (category.toLowerCase()) {
-      case 'clothing':
-        return Icons.shopping_bag;
-      case 'electronics':
-        return Icons.phone_iphone;
-      case 'transport':
-        return Icons.directions_car;
-      default:
-        return Icons.shopping_cart;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final category = ExpenseCategories.getCategoryByTitle(expense.category);
+
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -37,12 +25,12 @@ class ExpenseCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: category.color.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                getIconForCategory(expense.category),
-                color: kThemeColor,
+                category.icon,
+                color: category.color,
                 size: 24,
               ),
             ),
@@ -60,7 +48,7 @@ class ExpenseCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    expense.category,
+                    category.title,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],

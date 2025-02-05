@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/models/expense_categories.dart';
 import 'package:personal_expense_tracker/screens/new_expense_screen.dart';
+import '../constants.dart';
+import '../models/expense_category.dart';
 
 class CategorySelectionScreen extends StatelessWidget {
   const CategorySelectionScreen({super.key});
@@ -9,13 +12,13 @@ class CategorySelectionScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Expense'),
-        backgroundColor: Colors.red,
+        backgroundColor: kThemeColor,
       ),
       body: Column(
         children: [
           Container(
             width: double.infinity,
-            color: Colors.red,
+            color: kThemeColor,
             padding: const EdgeInsets.all(16),
             child: const Text(
               'SELECT CATEGORY',
@@ -28,51 +31,12 @@ class CategorySelectionScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                _buildCategoryItem(
-                  context,
-                  icon: Icons.fastfood,
-                  title: 'Food & Groceries',
-                  color: Colors.red.shade200,
-                ),
-                _buildCategoryItem(
-                  context,
-                  icon: Icons.directions_bus,
-                  title: 'Transportation',
-                  color: Colors.blue.shade200,
-                ),
-                _buildCategoryItem(
-                  context,
-                  icon: Icons.movie,
-                  title: 'Entertainment',
-                  color: Colors.teal.shade200,
-                ),
-                _buildCategoryItem(
-                  context,
-                  icon: Icons.shopping_bag,
-                  title: 'Shopping',
-                  color: Colors.blue.shade200,
-                ),
-                _buildCategoryItem(
-                  context,
-                  icon: Icons.local_hospital,
-                  title: 'Healthcare',
-                  color: Colors.red.shade200,
-                ),
-                _buildCategoryItem(
-                  context,
-                  icon: Icons.receipt_long,
-                  title: 'Bills & Utilities',
-                  color: Colors.green.shade200,
-                ),
-                _buildCategoryItem(
-                  context,
-                  icon: Icons.flight,
-                  title: 'Travel',
-                  color: Colors.teal.shade200,
-                ),
-              ],
+            child: ListView.builder(
+              itemCount: ExpenseCategories.categories.length,
+              itemBuilder: (context, index) {
+                final category = ExpenseCategories.categories[index];
+                return _buildCategoryItem(context, category);
+              },
             ),
           ),
           Padding(
@@ -83,7 +47,7 @@ class CategorySelectionScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: kThemeColor,
                       foregroundColor: Colors.white,
                     ),
                     child: const Text('CANCEL'),
@@ -97,23 +61,18 @@ class CategorySelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryItem(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required Color color,
-  }) {
+  Widget _buildCategoryItem(BuildContext context, ExpenseCategory category) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: color,
-        child: Icon(icon, color: Colors.white),
+        backgroundColor: category.color,
+        child: Icon(category.icon, color: Colors.white),
       ),
-      title: Text(title),
+      title: Text(category.title),
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NewExpenseScreen(category: title),
+            builder: (context) => NewExpenseScreen(category: category.title),
           ),
         );
       },
