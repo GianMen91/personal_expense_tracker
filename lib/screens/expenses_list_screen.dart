@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_expense_tracker/blocs/expenses_bloc.dart';
 import 'package:personal_expense_tracker/blocs/expenses_state.dart';
 
+import '../blocs/expenses_event.dart';
 import '../models/expense.dart';
 import '../widgets/expense_card.dart';
 
@@ -30,17 +31,13 @@ class ExpensesListScreen extends StatelessWidget {
       groupedExpenses[dateStr]!.add(expense);
     }
 
-
-    return Map.fromEntries(
-        groupedExpenses.entries.toList()
-          ..sort((a, b) {
-            DateTime dateA = _parseDate(a.key);
-            DateTime dateB = _parseDate(b.key);
-            return dateB.compareTo(dateA);
-          })
-    );
+    return Map.fromEntries(groupedExpenses.entries.toList()
+      ..sort((a, b) {
+        DateTime dateA = _parseDate(a.key);
+        DateTime dateB = _parseDate(b.key);
+        return dateB.compareTo(dateA);
+      }));
   }
-
 
   DateTime _parseDate(String dateStr) {
     if (dateStr == 'Today') {
@@ -49,10 +46,11 @@ class ExpensesListScreen extends StatelessWidget {
     return DateFormat('dd MMM').parse(dateStr);
   }
 
-
   String _formatDate(DateTime date) {
     final now = DateTime.now();
-    if (date.year == now.year && date.month == now.month && date.day == now.day) {
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
       return 'Today';
     }
     return DateFormat('dd MMM').format(date);
@@ -62,7 +60,7 @@ class ExpensesListScreen extends StatelessWidget {
     final now = DateTime.now();
     return expenses
         .where((expense) =>
-    expense.date.year == now.year && expense.date.month == now.month)
+            expense.date.year == now.year && expense.date.month == now.month)
         .fold(0, (sum, expense) => sum + expense.cost);
   }
 
@@ -104,10 +102,9 @@ class ExpensesListScreen extends StatelessWidget {
                       const Text(
                         'Total expense this month:',
                         style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
-                        ),
+                            color: Colors.white70,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -142,7 +139,15 @@ class ExpensesListScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          ...expenses.map((expense) => ExpenseCard(expense: expense)),
+                          ...expenses.map((expense) => ExpenseCard(
+                                expense: expense,
+                                onDelete: (expense) {
+                                  // Dispatch DeleteExpense event to remove item
+                                  context
+                                      .read<ExpensesBloc>()
+                                      .add(DeleteExpense(expense));
+                                },
+                              )),
                         ],
                       );
                     },

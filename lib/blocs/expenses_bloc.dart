@@ -19,5 +19,12 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
       final expense = await dbHelper.getExpenses();
       emit(ExpensesState(expense: expense));
     });
+
+    on<DeleteExpense>((event, emit) async {
+      await dbHelper.deleteExpense(event.expense.id!);
+      final expense = await dbHelper.getExpenses();
+      emit(ExpensesState(expense: expense));
+    });
+
   }
 }

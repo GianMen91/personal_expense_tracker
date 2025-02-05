@@ -6,6 +6,7 @@ import 'package:personal_expense_tracker/blocs/expenses_state.dart';
 import 'package:personal_expense_tracker/models/expense.dart';
 import 'package:personal_expense_tracker/models/expense_categories.dart';
 import 'package:personal_expense_tracker/widgets/expense_card.dart';
+import '../blocs/expenses_event.dart';
 import '../constants.dart';
 
 class StatisticScreen extends StatefulWidget {
@@ -193,7 +194,15 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   itemCount: selectedCategoryExpenses.length,
                   itemBuilder: (context, index) {
                     final expense = selectedCategoryExpenses[index];
-                    return ExpenseCard(expense: expense);
+                    return ExpenseCard(
+                      expense: expense,
+                      onDelete: (expense) {
+                        // Dispatch DeleteExpense event to remove item
+                        context
+                            .read<ExpensesBloc>()
+                            .add(DeleteExpense(expense));
+                      },
+                    );
                   },
                 ),
               ),

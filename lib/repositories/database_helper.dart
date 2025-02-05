@@ -48,4 +48,14 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> maps = await db.query('expense');
     return List.generate(maps.length, (i) => Expense.fromMap(maps[i]));
   }
+
+  Future<int> deleteExpense(int id) async {
+    final db = await database;
+    return await db.delete(
+      'expense',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
 }
