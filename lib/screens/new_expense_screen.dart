@@ -59,14 +59,13 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
   }
 
   bool get _isFormValid {
-    if (_costController.text == null || _costController.text.trim().isEmpty) {
+    if (_costController.text.trim().isEmpty) {
       return false;
     }
     if (double.tryParse(_costController.text) == null) {
       return false;
     }
-    if (_descriptionController.text == null ||
-        _descriptionController.text.trim().isEmpty) {
+    if (_descriptionController.text.trim().isEmpty) {
       return false;
     }
     return true;

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/models/expense_category.dart';
 import 'package:personal_expense_tracker/screens/expenses_list_screen.dart';

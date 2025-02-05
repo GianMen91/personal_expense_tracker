@@ -7,14 +7,7 @@ import '../blocs/expenses_event.dart';
 import '../models/expense.dart';
 import '../widgets/expense_card.dart';
 
-import 'expense_detail_screen.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses_state.dart';
 import 'package:intl/intl.dart';
-import '../widgets/expense_card.dart';
 import '../constants.dart';
 
 class ExpensesListScreen extends StatelessWidget {
@@ -108,7 +101,7 @@ class ExpensesListScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        '${monthlyTotal.toStringAsFixed(2)} \€',
+                        '${monthlyTotal.toStringAsFixed(2)} €',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 28,

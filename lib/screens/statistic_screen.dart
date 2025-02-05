@@ -26,7 +26,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     final now = DateTime.now();
 
     for (int i = 4; i >= 0; i--) {
-      final month = DateTime(now.year, now.month - i, 1);
+      final month = DateTime(now.year, now.month - i);
       final monthStr = DateFormat('MMM').format(month);
       monthlyData[monthStr] = 0;
     }
