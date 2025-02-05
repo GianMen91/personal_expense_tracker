@@ -1,22 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../blocs/expenses_event.dart';
-import '../models/expense.dart';
-import '../blocs/expenses_bloc.dart';
-
 import 'package:intl/intl.dart';
 
+import '../blocs/expenses_bloc.dart';
+import '../blocs/expenses_event.dart';
+import '../constants.dart';
+import '../models/expense.dart';
 import '../models/expense_category.dart';
 
 class NewExpenseScreen extends StatefulWidget {
   final ExpenseCategory category;
 
-  const NewExpenseScreen({
-    super.key,
-    required this.category,
-  });
+  const NewExpenseScreen({super.key, required this.category});
 
   @override
   State<NewExpenseScreen> createState() => _NewExpenseScreenState();
@@ -28,39 +23,25 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
   final _costController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
-  Future<void> _selectDate(BuildContext context,
-      {bool isReminder = false}) async {
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isReminder ? _selectedDate : DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime(2024),
       lastDate: DateTime(2026),
     );
 
     if (picked != null) {
-      // Show time picker after date is selected
-      final TimeOfDay? time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (time != null) {
-        setState(() {
-          _selectedDate = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            time.hour,
-            time.minute,
-          );
-        });
-      }
+      setState(() {
+        _selectedDate = picked;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('New Expense'),
         leading: IconButton(
@@ -71,99 +52,131 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           children: [
-            _buildInputRow(
-              icon: Icons.euro,
-              child: TextField(
-                controller: _costController,
-                decoration: const InputDecoration(
-                  labelText: 'Add Expense',
-                  hintText: '0,00 €',
-                  border: UnderlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
+            // Expense Amount Input
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: _boxDecoration(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("€",
+                      style: TextStyle(fontSize: 26, color: kButtonColor)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _costController,
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(
+                          fontSize: 28, fontWeight: FontWeight.bold),
+                      decoration: const InputDecoration(
+                        hintText: "0",
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: widget.category.color,
-                child: Icon(widget.category.icon, color: Colors.white),
+            const SizedBox(height: 15),
+
+            // Category Selector
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: _boxDecoration(),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: widget.category.color,
+                    child: Icon(widget.category.icon, color: Colors.white),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(widget.category.title,
+                      style: const TextStyle(fontSize: 18)),
+                ],
               ),
-              title: Text(widget.category.title),
             ),
-            const SizedBox(height: 24),
-            _buildInputRow(
-              icon: Icons.description,
+            const SizedBox(height: 15),
+
+            // Note Input
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: _boxDecoration(),
               child: TextField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Description',
-                  border: UnderlineInputBorder(),
+                  hintText: "Description",
+                  border: InputBorder.none,
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            _buildInputRow(
-              icon: Icons.calendar_today,
-              child: InkWell(
-                onTap: () => _selectDate(context),
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                  ),
-                  child: Text(
-                    DateFormat('dd/MM/yyyy').format(_selectedDate),
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
-            Row(
-              children: [
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final expense = Expense(
-                          category: widget.category.title,
-                          description: _descriptionController.text,
-                          cost: double.tryParse(_costController.text) ?? 0.0,
-                          date: _selectedDate,
-                        );
-                        context.read<ExpensesBloc>().add(AddExpense(expense));
-                        Navigator.pop(context);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
+            const SizedBox(height: 15),
+
+            // Date Picker
+            InkWell(
+              onTap: () => _selectDate(context),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                decoration: _boxDecoration(),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_today, color: Colors.grey),
+                    const SizedBox(width: 10),
+                    Text(
+                      DateFormat('dd/MM/yyyy').format(_selectedDate),
+                      style: const TextStyle(fontSize: 18),
                     ),
-                    child: const Text('Save'),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+
+            const Spacer(),
+
+            // Save Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _saveExpense,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kButtonColor,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-              ],
+                child: const Text("SAVE",
+                    style: TextStyle(fontSize: 18, color: Colors.white)),
+              ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInputRow({
-    required IconData icon,
-    required Widget child,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 24),
-        const SizedBox(width: 16),
-        Expanded(child: child),
-      ],
+  void _saveExpense() {
+    if (_formKey.currentState?.validate() ?? true) {
+      final expense = Expense(
+        category: widget.category.title,
+        description: _descriptionController.text,
+        cost: double.tryParse(_costController.text) ?? 0.0,
+        date: _selectedDate,
+      );
+      context.read<ExpensesBloc>().add(AddExpense(expense));
+      Navigator.pop(context);
+    }
+  }
+
+  BoxDecoration _boxDecoration() {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
     );
   }
 }
