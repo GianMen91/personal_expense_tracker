@@ -5,7 +5,7 @@ import 'package:personal_expense_tracker/blocs/expenses_state.dart';
 
 import '../models/expense.dart';
 import '../widgets/expense_card.dart';
-import 'category_selection_screen.dart';
+
 import 'expense_detail_screen.dart';
 
 import 'package:flutter/material.dart';
