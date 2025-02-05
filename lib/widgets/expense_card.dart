@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/constants.dart';
 import '../models/expense.dart';
 import '../models/expense_categories.dart';
 
@@ -58,11 +59,11 @@ class ExpenseCard extends StatelessWidget {
               ),
             ),
             Text(
-              '-\$${expense.cost.toStringAsFixed(2)}',
+              '${expense.cost.toStringAsFixed(2)} €',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.red,
+                color: kThemeColor,
               ),
             ),
           ],
