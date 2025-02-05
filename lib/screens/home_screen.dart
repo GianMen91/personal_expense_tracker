@@ -1,14 +1,28 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses_state.dart';
+import 'package:personal_expense_tracker/screens/expenses_list_screen.dart';
+import 'package:personal_expense_tracker/screens/statistic_screen.dart';
 
-import '../widgets/expense_card.dart';
+import '../constants.dart';
 import 'category_selection_screen.dart';
-import 'expense_detail_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
+  final PageController _myPage = PageController();
+  int _currentIndex = 0;
+
+  ValueNotifier<bool> isDialOpen = ValueNotifier(false);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,38 +30,10 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Personal Expense Tracker'),
       ),
-      body: Column(
-        children: [
-          Text("Total Expenses: 200 €"),
-          Expanded(
-            child: BlocBuilder<ExpensesBloc, ExpensesState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return ListView.builder(
-                  itemCount: state.expense.length,
-                  itemBuilder: (context, index) {
-                    final expense = state.expense[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ExpenseDetailScreen(expense: expense)),
-                        );
-                      },
-                      child: ExpenseCard(expense: expense),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: kButtonColor,
+        shape: const CircleBorder(),
         onPressed: () {
           Navigator.push(
             context,
@@ -55,7 +41,53 @@ class HomeScreen extends StatelessWidget {
                 builder: (context) => const CategorySelectionScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white, size: 28),
+      ),
+      //floatingActionButton: buildSpeedDial(context),
+      bottomNavigationBar: BottomAppBar(
+        color: kBottomNavigationBarColor,
+        shape: const CircularNotchedRectangle(),
+        child: SizedBox(
+          height: 75,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.home,
+                    color: _currentIndex == 0 ? kThemeColor : Colors.grey),
+                onPressed: () {
+                  setState(() {
+                    _myPage.jumpToPage(0);
+                    _currentIndex = 0;
+                  });
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.bar_chart,
+                    color: _currentIndex == 1 ? kThemeColor : Colors.grey),
+                onPressed: () {
+                  setState(() {
+                    _myPage.jumpToPage(1);
+                    _currentIndex = 1;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: PageView(
+        controller: _myPage,
+        onPageChanged: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        physics: const NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          ExpensesListScreen(),
+          StatisticScreen(),
+        ],
       ),
     );
   }
