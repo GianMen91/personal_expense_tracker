@@ -30,11 +30,25 @@ class ExpensesListScreen extends StatelessWidget {
       groupedExpenses[dateStr]!.add(expense);
     }
 
+
     return Map.fromEntries(
         groupedExpenses.entries.toList()
-          ..sort((a, b) => b.key.compareTo(a.key))
+          ..sort((a, b) {
+            DateTime dateA = _parseDate(a.key);
+            DateTime dateB = _parseDate(b.key);
+            return dateB.compareTo(dateA);
+          })
     );
   }
+
+
+  DateTime _parseDate(String dateStr) {
+    if (dateStr == 'Today') {
+      return DateTime.now();
+    }
+    return DateFormat('dd MMM').parse(dateStr);
+  }
+
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
