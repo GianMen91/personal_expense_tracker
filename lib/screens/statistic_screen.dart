@@ -17,38 +17,14 @@ class StatisticScreen extends StatefulWidget {
 }
 
 class _StatisticScreenState extends State<StatisticScreen> {
-  String selectedCategory = "ALL"; // Default to show all expenses
+  String selectedCategory = "ALL";
   DateTime selectedDate = DateTime.now();
 
-  // Generates the last 5 months' data for the bar chart.
-  List<MapEntry<String, double>> _getMonthlyData(List<Expense> expenses) {
-    final monthlyData = <String, double>{};
-    final now = DateTime.now();
 
-    for (int i = 4; i >= 0; i--) {
-      final month = DateTime(now.year, now.month - i);
-      final monthStr = DateFormat('MMM').format(month);
-      monthlyData[monthStr] = 0;
-    }
-
-    for (var expense in expenses) {
-      final expenseMonthStr = DateFormat('MMM').format(expense.date);
-      if (monthlyData.containsKey(expenseMonthStr)) {
-        monthlyData[expenseMonthStr] = (monthlyData[expenseMonthStr] ?? 0) + expense.cost;
-      }
-    }
-
-    return monthlyData.entries.toList();
-  }
-
-  // Computes the total amount for the selected category and month.
-  double _getCategoryTotal(List<Expense> expenses) {
-    return expenses
-        .where((expense) =>
-    (selectedCategory == "ALL" || expense.category == selectedCategory) &&
-        expense.date.month == selectedDate.month &&
-        expense.date.year == selectedDate.year)
-        .fold(0.0, (sum, expense) => sum + expense.cost);
+  void _changeYear(int offset) {
+    setState(() {
+      selectedDate = DateTime(selectedDate.year + offset, selectedDate.month);
+    });
   }
 
   @override
@@ -61,151 +37,18 @@ class _StatisticScreenState extends State<StatisticScreen> {
 
         final monthlyData = _getMonthlyData(state.expense);
         final totalAmount = _getCategoryTotal(state.expense);
-
-        final selectedCategoryExpenses = state.expense
-            .where((expense) =>
-        (selectedCategory == "ALL" || expense.category == selectedCategory) &&
-            expense.date.month == selectedDate.month &&
-            expense.date.year == selectedDate.year)
-            .toList();
-
-        final maxAmount = monthlyData.fold(
-          0.0,
-              (max, entry) => entry.value > max ? entry.value : max,
-        );
-
-        final categories = ["ALL", ...ExpenseCategories.categories.map((c) => c.title)];
+        final filteredExpenses = _getFilteredExpenses(state.expense);
 
         return Container(
           color: const Color(0xFFF5F5F5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Total Expense Header
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: kThemeColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                margin: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${totalAmount.toStringAsFixed(2)} €',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      selectedCategory == "ALL"
-                          ? 'Total Expenses'
-                          : 'Total Expense for $selectedCategory',
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      DateFormat('MMMM, yyyy').format(selectedDate),
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Monthly Expenses Bar Chart
-              Container(
-                height: 200,
-                padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: monthlyData.map((entry) {
-                    final isCurrentMonth =
-                        entry.key == DateFormat('MMM').format(selectedDate);
-                    final heightPercent = maxAmount > 0 ? entry.value / maxAmount : 0;
-
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          final monthIndex = DateFormat('MMM').parse(entry.key).month;
-                          selectedDate = DateTime(selectedDate.year, monthIndex);
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            width: 30,
-                            height: 120 * heightPercent.toDouble(),
-                            decoration: BoxDecoration(
-                              color: isCurrentMonth
-                                  ? Colors.orange
-                                  : kThemeColor.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            entry.key,
-                            style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-
-              // Category Selection Pills
-              Container(
-                height: 50,
-                margin: const EdgeInsets.symmetric(vertical: 16),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = category;
-                        });
-                      },
-                      child: _buildCategoryPill(category, category == selectedCategory),
-                    );
-                  },
-                ),
-              ),
-
-              // Expenses List
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: selectedCategoryExpenses.length,
-                  itemBuilder: (context, index) {
-                    final expense = selectedCategoryExpenses[index];
-                    return ExpenseCard(
-                      expense: expense,
-                      onDelete: (expense) {
-                        // Dispatch DeleteExpense event to remove item
-                        context
-                            .read<ExpensesBloc>()
-                            .add(DeleteExpense(expense));
-                      },
-                    );
-                  },
-                ),
-              ),
+              _buildTotalExpenseCard(totalAmount),
+              _buildMonthSelector(),
+              _buildMonthlyChart(monthlyData),
+              _buildCategorySelector(),
+              _buildExpensesList(filteredExpenses),
             ],
           ),
         );
@@ -213,22 +56,187 @@ class _StatisticScreenState extends State<StatisticScreen> {
     );
   }
 
-  // Category Pill Widget
+
+  Widget _buildTotalExpenseCard(double totalAmount) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: kThemeColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${totalAmount.toStringAsFixed(2)} €',
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          Text(
+            selectedCategory == "ALL" ? 'Total Expenses' : 'Total for $selectedCategory',
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            DateFormat('MMMM, yyyy').format(selectedDate),
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  List<MapEntry<String, double>> _getMonthlyData(List<Expense> expenses) {
+    final Map<String, double> monthlyData = {
+      for (var i = 1; i <= 12; i++) DateFormat('MMM').format(DateTime(0, i)): 0.0
+    };
+
+    for (var expense in expenses) {
+      if (expense.date.year == selectedDate.year) {
+        final month = DateFormat('MMM').format(expense.date);
+        monthlyData[month] = monthlyData[month]! + expense.cost;
+      }
+    }
+
+    return monthlyData.entries.toList();
+  }
+
+
+  double _getCategoryTotal(List<Expense> expenses) {
+    if (selectedCategory == "ALL") {
+      return expenses.fold(0, (sum, expense) => sum + expense.cost);
+    }
+    return expenses
+        .where((expense) => expense.category == selectedCategory)
+        .fold(0, (sum, expense) => sum + expense.cost);
+  }
+
+
+  List<Expense> _getFilteredExpenses(List<Expense> expenses) {
+    return expenses.where((expense) {
+      final isSameMonth = expense.date.year == selectedDate.year && expense.date.month == selectedDate.month;
+      final isSameCategory = selectedCategory == "ALL" || expense.category == selectedCategory;
+      return isSameMonth && isSameCategory;
+    }).toList();
+  }
+
+
+  Widget _buildMonthSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(icon: const Icon(Icons.arrow_left, size: 30), onPressed: () => _changeYear(-1)),
+         Text(
+            DateFormat('yyyy').format(selectedDate),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+
+        IconButton(icon: const Icon(Icons.arrow_right, size: 30), onPressed: () => _changeYear(1)),
+      ],
+    );
+  }
+
+
+  Widget _buildMonthlyChart(List<MapEntry<String, double>> monthlyData) {
+    final maxAmount = monthlyData.fold(0.0, (max, entry) => entry.value > max ? entry.value : max);
+
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: monthlyData.map((entry) {
+            final isCurrentMonth = entry.key == DateFormat('MMM').format(selectedDate);
+            final heightPercent = maxAmount > 0 ? entry.value / maxAmount : 0;
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedDate = DateTime(selectedDate.year, DateFormat('MMM').parse(entry.key).month);
+                  });
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 120 * heightPercent.toDouble(),
+                      decoration: BoxDecoration(
+                        color: isCurrentMonth ? Colors.orange : kThemeColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(entry.key, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildCategorySelector() {
+    final categories = ["ALL", ...ExpenseCategories.categories.map((c) => c.title)];
+
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedCategory = category;
+              });
+            },
+            child: _buildCategoryPill(category, category == selectedCategory),
+          );
+        },
+      ),
+    );
+  }
+
+
+  Widget _buildExpensesList(List<Expense> expenses) {
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: expenses.length,
+        itemBuilder: (context, index) {
+          final expense = expenses[index];
+          return ExpenseCard(
+            expense: expense,
+            onDelete: (expense) {
+              context.read<ExpensesBloc>().add(DeleteExpense(expense));
+            },
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildCategoryPill(String title, bool isSelected) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? kThemeColor : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Colors.grey[600],
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
+      decoration: BoxDecoration(color: isSelected ? kThemeColor : Colors.white, borderRadius: BorderRadius.circular(20)),
+      child: Text(title, style: TextStyle(color: isSelected ? Colors.white : Colors.grey[600])),
     );
   }
 }
