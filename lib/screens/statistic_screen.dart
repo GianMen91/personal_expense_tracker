@@ -234,9 +234,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
   Widget _buildCategoryPill(String title, bool isSelected) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(color: isSelected ? kThemeColor : Colors.white, borderRadius: BorderRadius.circular(20)),
-      child: Text(title, style: TextStyle(color: isSelected ? Colors.white : Colors.grey[600])),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(color: isSelected ? kThemeColor : Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Center(
+        child: Text(title, style: TextStyle(color: isSelected ? Colors.white : Colors.grey[600], fontWeight: FontWeight.bold)),
+      ),
     );
   }
 }
