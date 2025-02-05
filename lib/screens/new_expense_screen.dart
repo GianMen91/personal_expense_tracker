@@ -92,10 +92,6 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
             _buildAmountInput(),
             const SizedBox(height: 15),
 
-            // Category Card
-            _buildCategoryCard(),
-            const SizedBox(height: 15),
-
             // Description Input
             _buildDescriptionInput(),
             const SizedBox(height: 15),
@@ -103,6 +99,10 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
             // Date Picker
             _buildDatePicker(),
             const SizedBox(height: 15),
+
+            // Category Card
+            _buildCategoryCard(),
+            const SizedBox(height: 35),
 
             const Spacer(),
 
