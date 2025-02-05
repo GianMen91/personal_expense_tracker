@@ -168,7 +168,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Center(
                       child: Container(
