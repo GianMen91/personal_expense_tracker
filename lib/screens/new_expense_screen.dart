@@ -78,6 +78,7 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFF5F5F5),
         title: const Text('New Expense'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
