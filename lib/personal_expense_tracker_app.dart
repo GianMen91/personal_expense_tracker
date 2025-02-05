@@ -7,12 +7,12 @@ class PersonalExpenseTrackerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Personal Expense Tracker',
-      theme: ThemeData(
-        primaryColor: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: const HomeScreen(),
-    );
+        title: 'Personal Expense Tracker',
+        theme: ThemeData(
+          primaryColor: Colors.blue,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        home: const HomeScreen(),
+        debugShowCheckedModeBanner: false);
   }
 }
