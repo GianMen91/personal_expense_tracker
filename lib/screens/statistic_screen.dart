@@ -41,15 +41,17 @@ class _StatisticScreenState extends State<StatisticScreen> {
 
         return Container(
           color: const Color(0xFFF5F5F5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTotalExpenseCard(totalAmount),
-              _buildMonthSelector(),
-              _buildMonthlyChart(monthlyData),
-              _buildCategorySelector(),
-              _buildExpensesList(filteredExpenses),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTotalExpenseCard(totalAmount),
+                _buildMonthSelector(),
+                _buildMonthlyChart(monthlyData),
+                _buildCategorySelector(),
+                _buildExpensesList(filteredExpenses),
+              ],
+            ),
           ),
         );
       },
@@ -144,6 +146,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
 
     return Container(
       height: 200,
+      width: double.infinity,
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
@@ -156,7 +159,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
             final heightPercent = maxAmount > 0 ? entry.value / maxAmount : 0;
 
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -165,13 +168,16 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 30,
-                      height: 120 * heightPercent.toDouble(),
-                      decoration: BoxDecoration(
-                        color: isCurrentMonth ? Colors.orange : kThemeColor.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(15),
+                    Center(
+                      child: Container(
+                        width: 30,
+                        height: 120 * heightPercent.toDouble(),
+                        decoration: BoxDecoration(
+                          color: isCurrentMonth ? Colors.orange : kThemeColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -214,20 +220,20 @@ class _StatisticScreenState extends State<StatisticScreen> {
 
 
   Widget _buildExpensesList(List<Expense> expenses) {
-    return Expanded(
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: expenses.length,
-        itemBuilder: (context, index) {
-          final expense = expenses[index];
-          return ExpenseCard(
-            expense: expense,
-            onDelete: (expense) {
-              context.read<ExpensesBloc>().add(DeleteExpense(expense));
-            },
-          );
-        },
-      ),
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: expenses.length,
+      itemBuilder: (context, index) {
+        final expense = expenses[index];
+        return ExpenseCard(
+          expense: expense,
+          onDelete: (expense) {
+            context.read<ExpensesBloc>().add(DeleteExpense(expense));
+          },
+        );
+      },
     );
   }
 
