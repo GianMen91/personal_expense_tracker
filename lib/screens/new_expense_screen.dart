@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -59,10 +60,11 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
   }
 
   bool get _isFormValid {
-    if (_costController.text.trim().isEmpty) {
+    if (_costController.text == null || _costController.text.trim().isEmpty) {
       return false;
     }
-    if (double.tryParse(_costController.text) == null) {
+    final number = double.tryParse(_costController.text.replaceAll(',', '.'));
+    if (number == null || number <= 0) {
       return false;
     }
     if (_descriptionController.text.trim().isEmpty) {
@@ -127,18 +129,21 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
             child: TextFormField(
               controller: _costController,
               textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*[.,]?\d*'))],
               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               decoration: const InputDecoration(
                 hintText: "0",
                 border: InputBorder.none,
               ),
-              validator: (value) {
+               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter a cost';
                 }
-                if (double.tryParse(value) == null) {
-                  return 'Please enter a valid number';
+
+                final number = double.tryParse(value.replaceAll(',', '.'));
+                if (number == null || number <= 0) {
+                  return 'Please enter a valid number greater than 0';
                 }
                 return null;
               },
@@ -233,7 +238,7 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
       final expense = Expense(
         category: widget.category.title,
         description: _descriptionController.text,
-        cost: double.tryParse(_costController.text) ?? 0.0,
+        cost: double.tryParse(_costController.text.replaceAll(',', '.')) ?? 0.0,
         date: _selectedDate,
       );
       context.read<ExpensesBloc>().add(AddExpense(expense));
