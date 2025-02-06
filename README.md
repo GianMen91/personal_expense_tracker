@@ -33,33 +33,6 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 
 ## App Architecture Overview
 
-`├── blocs
-│   ├── expenses
-│   │   ├── expenses_bloc.dart
-│   │   ├── expenses_event.dart
-│   │   └── expenses_state.dart
-│   └── navigation
-│       ├── navigation_bloc.dart
-│       ├── navigation_event.dart
-│       └── navigation_state.dart
-├── constants.dart
-├── main.dart
-├── models
-│   ├── expense.dart
-│   ├── expense_categories.dart
-│   └── expense_category.dart
-├── personal_expense_tracker_app.dart
-├── repositories
-│   └── database_helper.dart
-├── screens
-│   ├── expenses_list_screen.dart
-│   ├── home_screen.dart
-│   ├── new_expense_screen.dart
-│   └── statistic_screen.dart
-└── widgets
-└── expense_card.dart`
-
-
 The app follows a Clean Architecture pattern, which emphasizes a separation of concerns between the business logic and the presentation layers. 
 The business logic is responsible for handling all application data, user interactions, and state management, while the presentation layer is focused purely on the UI, displaying data and responding to user inputs. 
 This division allows for better maintainability, scalability, and testability.
