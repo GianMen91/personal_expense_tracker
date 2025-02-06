@@ -63,7 +63,8 @@ class NewExpenseScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
-        title: const Text('New Expense'),
+        title: const Text('New Expense',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -80,7 +81,6 @@ class NewExpenseScreen extends StatelessWidget {
           const SizedBox(height: 15),
           _buildCategoryCard(),
           const SizedBox(height: 35),
-          const Spacer(),
           _buildSaveButton(context),
           const SizedBox(height: 20),
         ],
