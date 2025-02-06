@@ -36,7 +36,7 @@ class ExpensesListScreen extends StatelessWidget {
     if (dateStr == 'Today') {
       return DateTime.now();
     }
-    return DateFormat('dd MMM').parse(dateStr);
+    return DateFormat('dd MMM yyyy').parse(dateStr);
   }
 
   String _formatDate(DateTime date) {
@@ -46,7 +46,7 @@ class ExpensesListScreen extends StatelessWidget {
         date.day == now.day) {
       return 'Today';
     }
-    return DateFormat('dd MMM').format(date);
+    return DateFormat('dd MMM yyyy').format(date);
   }
 
   double _calculateMonthlyTotal(List<Expense> expenses) {
