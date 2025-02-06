@@ -1,4 +1,4 @@
-import 'package:personal_expense_tracker/models/expense.dart';
+import '../../models/expense.dart';
 
 class ExpensesState {
   final List<Expense> expenses;
@@ -6,6 +6,7 @@ class ExpensesState {
   final String? errorMessage;
   final String selectedCategory;
   final DateTime selectedDate;
+  final String? selectedMonth;
 
   ExpensesState({
     required this.expenses,
@@ -13,6 +14,7 @@ class ExpensesState {
     this.errorMessage,
     this.selectedCategory = "ALL",
     required this.selectedDate,
+    this.selectedMonth,
   });
 
   ExpensesState copyWith({
@@ -21,13 +23,15 @@ class ExpensesState {
     String? errorMessage,
     String? selectedCategory,
     DateTime? selectedDate,
+    String? selectedMonth,
   }) {
     return ExpensesState(
       expenses: expenses ?? this.expenses,
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
+      errorMessage: errorMessage ?? this.errorMessage,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       selectedDate: selectedDate ?? this.selectedDate,
+      selectedMonth: selectedMonth,
     );
   }
 }

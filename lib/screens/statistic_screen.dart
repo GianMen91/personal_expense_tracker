@@ -21,8 +21,10 @@ class StatisticScreen extends StatelessWidget {
         }
 
         final monthlyData = _getMonthlyData(state.expenses, state.selectedDate);
-        final totalAmount = _getCategoryTotal(state.expenses, state.selectedCategory,state.selectedDate);
-        final filteredExpenses = _getFilteredExpenses(state.expenses, state.selectedCategory, state.selectedDate);
+        final totalAmount = _getTotalAmount(state.expenses,
+            state.selectedCategory, state.selectedDate, state.selectedMonth);
+        final filteredExpenses = _getFilteredExpenses(state.expenses,
+            state.selectedCategory, state.selectedDate, state.selectedMonth);
 
         return Container(
           color: const Color(0xFFF5F5F5),
@@ -30,9 +32,10 @@ class StatisticScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTotalExpenseCard(totalAmount, state.selectedDate,state.selectedCategory, ),
+                _buildTotalExpenseCard(totalAmount, state.selectedDate,
+                    state.selectedCategory, state.selectedMonth),
                 _buildYearSelector(context, state.selectedDate),
-                _buildMonthlyChart(monthlyData, context),
+                _buildMonthlyChart(monthlyData, context, state.selectedMonth),
                 _buildCategorySelector(context, state.selectedCategory),
                 _buildExpensesList(filteredExpenses, context),
               ],
@@ -43,8 +46,8 @@ class StatisticScreen extends StatelessWidget {
     );
   }
 
-
-  Widget _buildTotalExpenseCard(double totalAmount, DateTime selectedDate, String selectedCategory) {
+  Widget _buildTotalExpenseCard(double totalAmount, DateTime selectedDate,
+      String selectedCategory, String? selectedMonth) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -59,27 +62,42 @@ class StatisticScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             '${totalAmount.toStringAsFixed(2)} €',
-            style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(
+                fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 10),
           Text(
-            'Total Expenses',
+            'Total Expenses ${DateFormat('yyyy').format(selectedDate)}${selectedCategory != "ALL" ? ' - $selectedCategory' : ''}',
             style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
-          Text(
-            '${DateFormat('MMMM, yyyy').format(selectedDate)}${selectedCategory != "ALL" ? ' - $selectedCategory' : ''}',
-            style: const TextStyle(color: Colors.white, fontSize: 16),
-          ),
+          if (selectedMonth != null)
+            Text(
+              DateFormat('MMMM').format(selectedDate),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
         ],
       ),
     );
   }
 
+  double _getTotalAmount(List<Expense> expenses, String selectedCategory,
+      DateTime selectedDate, String? selectedMonth) {
+    return expenses.where((expense) {
+      final isSameYear = expense.date.year == selectedDate.year;
+      final isSameMonth = selectedMonth == null ||
+          DateFormat('MMM').format(expense.date) == selectedMonth;
+      final isSameCategory =
+          selectedCategory == "ALL" || expense.category == selectedCategory;
+      return isSameYear && isSameMonth && isSameCategory;
+    }).fold(0, (sum, expense) => sum + expense.cost);
+  }
 
-  List<MapEntry<String, double>> _getMonthlyData(List<Expense> expenses, DateTime selectedDate) {
+  List<MapEntry<String, double>> _getMonthlyData(
+      List<Expense> expenses, DateTime selectedDate) {
     final Map<String, double> monthlyData = {
-      for (var i = 1; i <= 12; i++) DateFormat('MMM').format(DateTime(0, i)): 0.0
+      for (var i = 1; i <= 12; i++)
+        DateFormat('MMM').format(DateTime(selectedDate.year, i)): 0.0
     };
 
     for (var expense in expenses) {
@@ -92,22 +110,15 @@ class StatisticScreen extends StatelessWidget {
     return monthlyData.entries.toList();
   }
 
-  double _getCategoryTotal(List<Expense> expenses, String selectedCategory, DateTime selectedDate) {
-    return expenses
-        .where((expense) {
-      final isSameYear = expense.date.year == selectedDate.year;
-      final isSameMonth = expense.date.month == selectedDate.month || selectedDate.month == 0;
-      final isSameCategory = selectedCategory == "ALL" || expense.category == selectedCategory;
-      return isSameYear && isSameMonth && isSameCategory;
-    })
-        .fold(0, (sum, expense) => sum + expense.cost);
-  }
-
-  List<Expense> _getFilteredExpenses(List<Expense> expenses, String selectedCategory, DateTime selectedDate) {
+  List<Expense> _getFilteredExpenses(List<Expense> expenses,
+      String selectedCategory, DateTime selectedDate, String? selectedMonth) {
     return expenses.where((expense) {
-      final isSameMonth = expense.date.year == selectedDate.year && expense.date.month == selectedDate.month;
-      final isSameCategory = selectedCategory == "ALL" || expense.category == selectedCategory;
-      return isSameMonth && isSameCategory;
+      final isSameYear = expense.date.year == selectedDate.year;
+      final isSameMonth = selectedMonth == null ||
+          DateFormat('MMM').format(expense.date) == selectedMonth;
+      final isSameCategory =
+          selectedCategory == "ALL" || expense.category == selectedCategory;
+      return isSameYear && isSameMonth && isSameCategory;
     }).toList();
   }
 
@@ -135,27 +146,32 @@ class StatisticScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMonthlyChart(List<MapEntry<String, double>> monthlyData, BuildContext context) {
-    final maxAmount = monthlyData.fold(0.0, (max, entry) => entry.value > max ? entry.value : max);
+  Widget _buildMonthlyChart(List<MapEntry<String, double>> monthlyData,
+      BuildContext context, String? selectedMonth) {
+    final maxAmount = monthlyData.fold(
+        0.0, (max, entry) => entry.value > max ? entry.value : max);
 
     return Container(
       height: 200,
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: monthlyData.map((entry) {
             final heightPercent = maxAmount > 0 ? entry.value / maxAmount : 0;
+            final isSelected = entry.key == selectedMonth;
 
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GestureDetector(
                 onTap: () {
-                  context.read<ExpensesBloc>().add(ChangeMonthEvent(entry.key));
+                  context.read<ExpensesBloc>().add(
+                      ChangeMonthSelectionEvent(isSelected ? null : entry.key));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -165,15 +181,17 @@ class StatisticScreen extends StatelessWidget {
                         width: 30,
                         height: 120 * heightPercent.toDouble(),
                         decoration: BoxDecoration(
-                          color: entry.key == DateFormat('MMM').format(context.read<ExpensesBloc>().state.selectedDate)
+                          color: isSelected
                               ? Colors.orange
-                              :  kThemeColor.withOpacity(0.2),
+                              : kThemeColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(entry.key, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    Text(entry.key,
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 12)),
                   ],
                 ),
               ),
@@ -184,9 +202,11 @@ class StatisticScreen extends StatelessWidget {
     );
   }
 
-
   Widget _buildCategorySelector(BuildContext context, String selectedCategory) {
-    final categories = ["ALL", ...ExpenseCategories.categories.map((c) => c.title)];
+    final categories = [
+      "ALL",
+      ...ExpenseCategories.categories.map((c) => c.title)
+    ];
 
     return Container(
       height: 50,
@@ -230,9 +250,14 @@ class StatisticScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: isSelected ? kThemeColor : Colors.white, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: isSelected ? kThemeColor : Colors.white,
+          borderRadius: BorderRadius.circular(10)),
       child: Center(
-        child: Text(title, style: TextStyle(color: isSelected ? Colors.white : Colors.grey[600], fontWeight: FontWeight.bold)),
+        child: Text(title,
+            style: TextStyle(
+                color: isSelected ? Colors.white : Colors.grey[600],
+                fontWeight: FontWeight.bold)),
       ),
     );
   }
