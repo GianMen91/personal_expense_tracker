@@ -71,14 +71,13 @@ class StatisticScreen extends StatelessWidget {
                 fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 10),
-          Text(
-            'Total Expenses ${DateFormat('yyyy').format(selectedDate)}${selectedCategory != "ALL" ? ' - $selectedCategory' : ''}',
+          Text(selectedMonth != null ? 'Total Expenses $selectedMonth ${DateFormat('yyyy').format(selectedDate)}' :'Total Expenses ${DateFormat('yyyy').format(selectedDate)}',
             style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
-          if (selectedMonth != null)
+          if (selectedCategory != "ALL" )
             Text(
-              DateFormat('MMMM').format(selectedDate),
+              selectedCategory,
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
           const SizedBox(height: 8), // Add some spacing
