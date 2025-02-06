@@ -71,18 +71,20 @@ class _StatisticScreenState extends State<StatisticScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 10),
           Text(
             '${totalAmount.toStringAsFixed(2)} €',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
           ),
+          const SizedBox(height: 10),
           Text(
             selectedCategory == "ALL" ? 'Total Expenses' : 'Total for $selectedCategory',
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
             DateFormat('MMMM, yyyy').format(selectedDate),
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ],
       ),

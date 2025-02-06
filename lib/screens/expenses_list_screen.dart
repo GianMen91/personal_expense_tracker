@@ -92,21 +92,21 @@ class ExpensesListScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Total expense this month:',
-                        style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Text(
                         '${monthlyTotal.toStringAsFixed(2)} €',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 28,
+                          fontSize: 35,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Total expense this month',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18),
                       ),
                     ],
                   ),
