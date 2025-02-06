@@ -46,19 +46,27 @@ Make sure you have Flutter installed on your machine. You can follow the install
 ### Getting Started
 1. **Clone the repository:**
 
-`git clone https://github.com/GianMen91/personal_expense_tracker.git`
+    ```bat
+    git clone https://github.com/GianMen91/personal_expense_tracker.git
+    ```
 
 2. **Navigate to the project directory:**
 
-`cd personal_expense_tracker`
+    ```bat
+    cd personal_expense_tracker
+    ```
 
 3. **Install the dependencies:**
 
-`flutter pub get`
+    ```bat
+    flutter pub get
+    ```
 
 4. **Run the app:**
 
-`flutter run`
-
+    ```bat
+    flutter run
+    ```
+    
 This will launch the app in your preferred emulator or connected device.
 
