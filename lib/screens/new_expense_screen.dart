@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../blocs/expenses_bloc.dart';
-import '../blocs/expenses_event.dart';
+import '../blocs/expenses/expenses_bloc.dart';
+import '../blocs/expenses/expenses_event.dart';
 import '../constants.dart';
 import '../models/expense.dart';
 import '../models/expense_category.dart';

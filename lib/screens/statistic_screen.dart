@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_expense_tracker/blocs/expenses_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses_state.dart';
+import 'package:personal_expense_tracker/blocs/expenses/expenses_bloc.dart';
+import 'package:personal_expense_tracker/blocs/expenses/expenses_state.dart';
 import 'package:personal_expense_tracker/models/expense.dart';
 import 'package:personal_expense_tracker/models/expense_categories.dart';
 import 'package:personal_expense_tracker/widgets/expense_card.dart';
-import '../blocs/expenses_event.dart';
+import '../blocs/expenses/expenses_event.dart';
 import '../constants.dart';
 
 class StatisticScreen extends StatefulWidget {

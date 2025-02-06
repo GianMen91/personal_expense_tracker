@@ -8,7 +8,7 @@ class PersonalExpenseTrackerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Personal Expense Tracker',
-        home: const HomeScreen(),
+        home: HomeScreen(),
         debugShowCheckedModeBanner: false);
   }
 }
