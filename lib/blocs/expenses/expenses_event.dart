@@ -1,4 +1,4 @@
-import '../models/expense.dart';
+import '../../models/expense.dart';
 
 abstract class ExpensesEvent {}
 
@@ -15,3 +15,9 @@ class DeleteExpense extends ExpensesEvent {
 
   DeleteExpense(this.expense);
 }
+
+class SelectDate extends ExpensesEvent {
+  final DateTime selectedDate;
+  SelectDate(this.selectedDate);
+}
+
