@@ -30,7 +30,7 @@ class StatisticScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTotalExpenseCard(totalAmount, state.selectedCategory, state.selectedDate),
+                _buildTotalExpenseCard(totalAmount, state.selectedDate,state.selectedCategory, ),
                 _buildYearSelector(context, state.selectedDate),
                 _buildMonthlyChart(monthlyData, context),
                 _buildCategorySelector(context, state.selectedCategory),
@@ -44,10 +44,7 @@ class StatisticScreen extends StatelessWidget {
   }
 
 
-  Widget _buildTotalExpenseCard(double totalAmount, String selectedCategory, DateTime selectedDate) {
-    final displayMonth = selectedDate.month != DateTime.now().month ? DateFormat('MMMM').format(selectedDate) : '';
-    final displayYear = DateFormat('yyyy').format(selectedDate);
-
+  Widget _buildTotalExpenseCard(double totalAmount, DateTime selectedDate, String selectedCategory) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -71,7 +68,7 @@ class StatisticScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            displayMonth.isNotEmpty ? '$displayMonth, $displayYear' : displayYear,
+            '${DateFormat('MMMM, yyyy').format(selectedDate)}${selectedCategory != "ALL" ? ' - $selectedCategory' : ''}',
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ],
