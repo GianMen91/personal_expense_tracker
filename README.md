@@ -33,7 +33,7 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 
 ## App Architecture Overview
 
-├── blocs
+`├── blocs
 │   ├── expenses
 │   │   ├── expenses_bloc.dart
 │   │   ├── expenses_event.dart
@@ -57,7 +57,7 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 │   ├── new_expense_screen.dart
 │   └── statistic_screen.dart
 └── widgets
-└── expense_card.dart
+└── expense_card.dart`
 
 
 The app follows a Clean Architecture pattern, which emphasizes a separation of concerns between the business logic and the presentation layers. 
