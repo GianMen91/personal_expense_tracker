@@ -16,8 +16,3 @@ class DeleteExpense extends ExpensesEvent {
   DeleteExpense(this.expense);
 }
 
-class SelectDate extends ExpensesEvent {
-  final DateTime selectedDate;
-  SelectDate(this.selectedDate);
-}
-

@@ -10,10 +10,6 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     on<LoadExpense>(_onLoadExpense);
     on<AddExpense>(_onAddExpense);
     on<DeleteExpense>(_onDeleteExpense);
-    on<SelectDate>((event, emit) {
-      emit(state.copyWith(selectedDate: event.selectedDate));
-    });
-
   }
 
   Future<void> _onLoadExpense(
