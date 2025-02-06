@@ -31,7 +31,7 @@ class StatisticScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTotalExpenseCard(totalAmount),
-                _buildMonthSelector(context, state.selectedDate),
+                _buildYearSelector(context, state.selectedDate),
                 _buildMonthlyChart(monthlyData, context),
                 _buildCategorySelector(context, state.selectedCategory),
                 _buildExpensesList(filteredExpenses, context),
@@ -107,7 +107,7 @@ class StatisticScreen extends StatelessWidget {
     }).toList();
   }
 
-  Widget _buildMonthSelector(BuildContext context, DateTime selectedDate) {
+  Widget _buildYearSelector(BuildContext context, DateTime selectedDate) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
