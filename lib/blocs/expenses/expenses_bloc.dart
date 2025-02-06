@@ -3,12 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:personal_expense_tracker/blocs/expenses/expenses_event.dart';
 import 'package:personal_expense_tracker/blocs/expenses/expenses_state.dart';
 import '../../repositories/database_helper.dart';
-import '../../models/expense.dart';
 
 class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   final DatabaseHelper dbHelper;
 
-  ExpensesBloc(this.dbHelper) : super(ExpensesState(expenses: [], selectedCategory: "ALL", selectedDate: DateTime.now())) {
+  ExpensesBloc(this.dbHelper) : super(ExpensesState(expenses: [], selectedDate: DateTime.now())) {
     on<LoadExpense>(_onLoadExpense);
     on<AddExpense>(_onAddExpense);
     on<DeleteExpense>(_onDeleteExpense);
@@ -22,7 +21,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     try {
       final expenses = await dbHelper.getExpenses();
       emit(state.copyWith(expenses: expenses, isLoading: false));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
@@ -32,7 +31,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
       await dbHelper.addExpense(event.expense);
       final expenses = await dbHelper.getExpenses();
       emit(state.copyWith(expenses: expenses));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }
@@ -42,7 +41,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
       await dbHelper.deleteExpense(event.expense.id!);
       final expenses = await dbHelper.getExpenses();
       emit(state.copyWith(expenses: expenses));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }
