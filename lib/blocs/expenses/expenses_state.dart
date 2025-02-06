@@ -1,25 +1,33 @@
-import '../../models/expense.dart';
+import 'package:personal_expense_tracker/models/expense.dart';
 
 class ExpensesState {
-  final List<Expense> expense;
+  final List<Expense> expenses;
   final bool isLoading;
   final String? errorMessage;
+  final String selectedCategory;
+  final DateTime selectedDate;
 
   ExpensesState({
-    required this.expense,
+    required this.expenses,
     this.isLoading = false,
     this.errorMessage,
+    this.selectedCategory = "ALL",
+    required this.selectedDate,
   });
 
   ExpensesState copyWith({
-    List<Expense>? expense,
+    List<Expense>? expenses,
     bool? isLoading,
     String? errorMessage,
+    String? selectedCategory,
+    DateTime? selectedDate,
   }) {
     return ExpensesState(
-      expense: expense ?? this.expense,
+      expenses: expenses ?? this.expenses,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      selectedDate: selectedDate ?? this.selectedDate,
     );
   }
 }

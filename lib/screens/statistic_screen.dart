@@ -9,23 +9,8 @@ import 'package:personal_expense_tracker/widgets/expense_card.dart';
 import '../blocs/expenses/expenses_event.dart';
 import '../constants.dart';
 
-class StatisticScreen extends StatefulWidget {
+class StatisticScreen extends StatelessWidget {
   const StatisticScreen({super.key});
-
-  @override
-  State<StatisticScreen> createState() => _StatisticScreenState();
-}
-
-class _StatisticScreenState extends State<StatisticScreen> {
-  String selectedCategory = "ALL";
-  DateTime selectedDate = DateTime.now();
-
-
-  void _changeYear(int offset) {
-    setState(() {
-      selectedDate = DateTime(selectedDate.year + offset, selectedDate.month);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +20,9 @@ class _StatisticScreenState extends State<StatisticScreen> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final monthlyData = _getMonthlyData(state.expense);
-        final totalAmount = _getCategoryTotal(state.expense);
-        final filteredExpenses = _getFilteredExpenses(state.expense);
+        final monthlyData = _getMonthlyData(state.expenses, state.selectedDate);
+        final totalAmount = _getCategoryTotal(state.expenses, state.selectedCategory);
+        final filteredExpenses = _getFilteredExpenses(state.expenses, state.selectedCategory, state.selectedDate);
 
         return Container(
           color: const Color(0xFFF5F5F5),
@@ -46,10 +31,10 @@ class _StatisticScreenState extends State<StatisticScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTotalExpenseCard(totalAmount),
-                _buildMonthSelector(),
-                _buildMonthlyChart(monthlyData),
-                _buildCategorySelector(),
-                _buildExpensesList(filteredExpenses),
+                _buildMonthSelector(context, state.selectedDate),
+                _buildMonthlyChart(monthlyData, context),
+                _buildCategorySelector(context, state.selectedCategory),
+                _buildExpensesList(filteredExpenses, context),
               ],
             ),
           ),
@@ -57,7 +42,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
       },
     );
   }
-
 
   Widget _buildTotalExpenseCard(double totalAmount) {
     return Container(
@@ -78,12 +62,12 @@ class _StatisticScreenState extends State<StatisticScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            selectedCategory == "ALL" ? 'Total Expenses' : 'Total for $selectedCategory',
+            'Total Expenses',
             style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
-            DateFormat('MMMM, yyyy').format(selectedDate),
+            DateFormat('MMMM, yyyy').format(DateTime.now()),
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ],
@@ -91,8 +75,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     );
   }
 
-
-  List<MapEntry<String, double>> _getMonthlyData(List<Expense> expenses) {
+  List<MapEntry<String, double>> _getMonthlyData(List<Expense> expenses, DateTime selectedDate) {
     final Map<String, double> monthlyData = {
       for (var i = 1; i <= 12; i++) DateFormat('MMM').format(DateTime(0, i)): 0.0
     };
@@ -107,8 +90,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     return monthlyData.entries.toList();
   }
 
-
-  double _getCategoryTotal(List<Expense> expenses) {
+  double _getCategoryTotal(List<Expense> expenses, String selectedCategory) {
     if (selectedCategory == "ALL") {
       return expenses.fold(0, (sum, expense) => sum + expense.cost);
     }
@@ -117,8 +99,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
         .fold(0, (sum, expense) => sum + expense.cost);
   }
 
-
-  List<Expense> _getFilteredExpenses(List<Expense> expenses) {
+  List<Expense> _getFilteredExpenses(List<Expense> expenses, String selectedCategory, DateTime selectedDate) {
     return expenses.where((expense) {
       final isSameMonth = expense.date.year == selectedDate.year && expense.date.month == selectedDate.month;
       final isSameCategory = selectedCategory == "ALL" || expense.category == selectedCategory;
@@ -126,24 +107,31 @@ class _StatisticScreenState extends State<StatisticScreen> {
     }).toList();
   }
 
-
-  Widget _buildMonthSelector() {
+  Widget _buildMonthSelector(BuildContext context, DateTime selectedDate) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(icon: const Icon(Icons.arrow_left, size: 30), onPressed: () => _changeYear(-1)),
-         Text(
-            DateFormat('yyyy').format(selectedDate),
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-
-        IconButton(icon: const Icon(Icons.arrow_right, size: 30), onPressed: () => _changeYear(1)),
+        IconButton(
+          icon: const Icon(Icons.arrow_left, size: 30),
+          onPressed: () {
+            context.read<ExpensesBloc>().add(ChangeYearEvent(-1));
+          },
+        ),
+        Text(
+          DateFormat('yyyy').format(selectedDate),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        IconButton(
+          icon: const Icon(Icons.arrow_right, size: 30),
+          onPressed: () {
+            context.read<ExpensesBloc>().add(ChangeYearEvent(1));
+          },
+        ),
       ],
     );
   }
 
-
-  Widget _buildMonthlyChart(List<MapEntry<String, double>> monthlyData) {
+  Widget _buildMonthlyChart(List<MapEntry<String, double>> monthlyData, BuildContext context) {
     final maxAmount = monthlyData.fold(0.0, (max, entry) => entry.value > max ? entry.value : max);
 
     return Container(
@@ -157,16 +145,14 @@ class _StatisticScreenState extends State<StatisticScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: monthlyData.map((entry) {
-            final isCurrentMonth = entry.key == DateFormat('MMM').format(selectedDate);
+            final isCurrentMonth = entry.key == DateFormat('MMM').format(DateTime.now());
             final heightPercent = maxAmount > 0 ? entry.value / maxAmount : 0;
 
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    selectedDate = DateTime(selectedDate.year, DateFormat('MMM').parse(entry.key).month);
-                  });
+                  context.read<ExpensesBloc>().add(ChangeMonthEvent(entry.key));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -193,8 +179,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     );
   }
 
-
-  Widget _buildCategorySelector() {
+  Widget _buildCategorySelector(BuildContext context, String selectedCategory) {
     final categories = ["ALL", ...ExpenseCategories.categories.map((c) => c.title)];
 
     return Container(
@@ -208,9 +193,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
           final category = categories[index];
           return GestureDetector(
             onTap: () {
-              setState(() {
-                selectedCategory = category;
-              });
+              context.read<ExpensesBloc>().add(ChangeCategoryEvent(category));
             },
             child: _buildCategoryPill(category, category == selectedCategory),
           );
@@ -219,8 +202,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     );
   }
 
-
-  Widget _buildExpensesList(List<Expense> expenses) {
+  Widget _buildExpensesList(List<Expense> expenses, BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

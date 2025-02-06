@@ -67,8 +67,8 @@ class ExpensesListScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final monthlyTotal = _calculateMonthlyTotal(state.expense);
-          final groupedExpenses = _groupExpensesByDate(state.expense);
+          final monthlyTotal = _calculateMonthlyTotal(state.expenses);
+          final groupedExpenses = _groupExpensesByDate(state.expenses);
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
