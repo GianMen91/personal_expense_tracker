@@ -10,7 +10,11 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 
 <img src="img/img-1.png" width=300 /> <img src="img/img-2.png" width=300 /> 
 
-<img src="img/img-3.png" width=300 /> 
+<img src="img/img-3.png" width=300 /> <img src="img/img-4.png" width=300 /> 
+
+<img src="img/img-5.png" width=300 /> <img src="img/img-6.png" width=300 /> 
+
+<img src="img/img-7.png" width=300 /> <img src="img/img-8.png" width=300 /> 
 
 ## Features
 * **Add Expense Entries**: Users can create new expense entries by clicking on the "+" button in the middle of the screen. This opens a dialog where the user can select a category for the expense. Each category is displayed with an associated icon for easy identification. After selecting a category, the user is presented with a new view where they can fill in the following fields:
