@@ -48,7 +48,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   }
 
   void _onChangeCategory(ChangeCategoryEvent event, Emitter<ExpensesState> emit) {
-    emit(state.copyWith(selectedCategory: event.category));
+    emit(state.copyWith(selectedCategory: event.category, selectedMonth: state.selectedMonth));
   }
 
   void _onChangeYear(ChangeYearEvent event, Emitter<ExpensesState> emit) {
