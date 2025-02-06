@@ -22,7 +22,7 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 
 * **Home Screen**: A list of expenses is displayed, grouped by day for better organization. Users can delete individual expense entries by swiping left on an expense item in the list or by clicking the delete button on each expense card. This action will remove the expense from the list and update the total expense calculation accordingly.
 
-* **Statistic Screen Summary**: Provides a summary view showing:
+* **Statistics Screen** show:
     * Total expenses for the selected month or year. Users can switch between views by clicking on the arrow (for year) or on the chart (for month).
     * The category/ies with the highest spending for the selected month or year.
     * **Category Filtering**: Users can filter expenses by category (e.g., Food, Travel, Shopping) and view the corresponding expenses.
@@ -30,6 +30,84 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 * **Data Persistence**: Expenses are stored locally on the device using a persistence mechanism (e.g., SQLite or shared preferences), ensuring they remain visible even after restarting the app.
 
 * **Responsive Design**: The app is optimized for different screen sizes and orientations.
+
+## App Architecture Overview
+
+├── blocs
+│   ├── expenses
+│   │   ├── expenses_bloc.dart
+│   │   ├── expenses_event.dart
+│   │   └── expenses_state.dart
+│   └── navigation
+│       ├── navigation_bloc.dart
+│       ├── navigation_event.dart
+│       └── navigation_state.dart
+├── constants.dart
+├── main.dart
+├── models
+│   ├── expense.dart
+│   ├── expense_categories.dart
+│   └── expense_category.dart
+├── personal_expense_tracker_app.dart
+├── repositories
+│   └── database_helper.dart
+├── screens
+│   ├── expenses_list_screen.dart
+│   ├── home_screen.dart
+│   ├── new_expense_screen.dart
+│   └── statistic_screen.dart
+└── widgets
+└── expense_card.dart
+
+
+The app follows a Clean Architecture pattern, which emphasizes a separation of concerns between the business logic and the presentation layers. 
+The business logic is responsible for handling all application data, user interactions, and state management, while the presentation layer is focused purely on the UI, displaying data and responding to user inputs. 
+This division allows for better maintainability, scalability, and testability.
+
+This architecture is implemented using the BLoC (Business Logic Component) pattern for state management, along with a model-view approach where the app is divided into:
+
+1. Business Logic Layer (BLoC)
+2. Data Layer (Models and Repositories)
+3. Presentation Layer (Screens and Widgets)
+
+### 1. Business Logic Layer (BLoC)
+The **business logic layer** of the app is responsible for handling the flow of data and events in the application. 
+It ensures that the logic and state of the application are managed efficiently and can be easily tested. 
+This layer is implemented using the BLoC (Business Logic Component) pattern, which uses streams and events to manage state.
+
+**Components:**
+* `expenses_bloc.dart`: This file contains the BLoC for managing expenses. It listens to user events (like adding a new expense, delete an expense, or selecting a month), processes them, and updates the app’s state. It emits new states based on the logic executed.
+* `navigation_bloc.dart`: This BLoC manages the navigation state of the app. It controls which screen is active and can be used to switch between different views (e.g., between the Home Screen and the Statistics Screen).
+* **State Management**: The app’s state is represented as states (e.g., expense list, navigation state, etc.) and events (e.g., add expense, update expense). The BLoC listens for these events and processes them, emitting new states as necessary.
+
+### 2. Data Layer (Models and Repositories)
+The **data layer** manages all of the app’s data, including models and repositories. It contains the definitions of the data structures used throughout the app and also handles the interaction with the data source (e.g., local storage or database).
+
+**Components:**
+* **Models** (`expense.dart`, `expense_categories.dart`): These files define the data structures used in the app, such as `Expense`, `ExpenseCategory`, and `ExpenseCategories`. They hold the attributes (like amount, category, and date) and may contain some logic for manipulating the data.
+* **Repositories** (`database_helper.dart`): This component interacts with the local storage/database to persist and retrieve data.
+
+### 3. Presentation Layer (Screens and Widgets)
+The **presentation layer** is the part of the app that users interact with directly. This layer is responsible for displaying data, handling UI interactions, and sending events to the business logic layer. It’s where all the screens and UI components live.
+
+**Components:**
+* Screens (`home_screen.dart`, `new_expense_screen.dart`, `statistic_screen.dart`): These are the main visual components of the app. They represent different views that the user interacts with.
+  * The Home Screen displays a list of expenses.
+  * The New Expense Screen allows users to add new expenses.
+  * The Statistic Screen presents summarized data and charts.
+
+  These screens listen to the state managed by the BLoC and rebuild when necessary.
+
+* Widgets (`expense_card.dart`): Custom Flutter widgets that are used across the app to display individual elements. For example, `expense_card.dart` is a widget that displays each expense item in a card format.
+
+### Interaction Between Layers
+The interaction between these layers occurs as follows:
+
+1. **User Interaction**: The **presentation layer** (screens and widgets) listens for user inputs, such as button taps or category selections.
+2. **Event Trigger**: Upon receiving an event (e.g., user selects a category or adds an expense), the **presentation layer** sends an event to the **BLoC** (business logic layer).
+3. **Business Logic Processing**: The **BLoC** receives the event, processes it (e.g., adds an expense to the list or retrieves expenses from the database), and generates a new **state**.
+4. **State Update**: The **BLoC** emits the new state, which is received by the presentation layer.
+5. **UI Update**: The **presentation layer** listens to the BLoC for state changes and updates the UI accordingly. For example, when a new expense is added, the list of expenses is updated on the **Home Screen**, or when the user selects a category, the chart on the **Statistics Screen** is updated.
 
 ## Technologies Used
 * **Flutter**: Framework for building high-quality, natively compiled applications for mobile, web, and desktop from a single codebase.
@@ -39,9 +117,6 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 * **Equatable**: Simplifies equality comparisons in Dart objects, making BLoC events and states more efficient.
 * **Linting**: The project adheres to best coding practices using custom lint rules to maintain a clean codebase.
 * **Widget Testing**: Comprehensive widget tests ensure the stability and reliability of UI components.
-
-## Responsiveness
-The application is designed to provide a consistent and enjoyable experience across various screen sizes, from small mobile devices to large tablets. Whether in portrait or landscape mode, the app adapts seamlessly to offer an intuitive and engaging user interface.
 
 ## Instructions to Run the App
 
