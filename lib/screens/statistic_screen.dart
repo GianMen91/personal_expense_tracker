@@ -33,7 +33,7 @@ class StatisticScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTotalExpenseCard(totalAmount, state.selectedDate,
-                    state.selectedCategory, state.selectedMonth),
+                    state.selectedCategory, state.selectedMonth,state.expenses),
                 _buildYearSelector(context, state.selectedDate),
                 _buildMonthlyChart(monthlyData, context, state.selectedMonth),
                 _buildCategorySelector(context, state.selectedCategory),
@@ -47,7 +47,12 @@ class StatisticScreen extends StatelessWidget {
   }
 
   Widget _buildTotalExpenseCard(double totalAmount, DateTime selectedDate,
-      String selectedCategory, String? selectedMonth) {
+      String selectedCategory, String? selectedMonth, List<Expense> expenses) {
+    final highestSpendingCategory = _getHighestSpendingCategory(
+        expenses,
+        selectedDate,
+        selectedMonth); // Get highest spending category
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -76,9 +81,55 @@ class StatisticScreen extends StatelessWidget {
               DateFormat('MMMM').format(selectedDate),
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
+          const SizedBox(height: 8), // Add some spacing
+          if (highestSpendingCategory !=
+              null && selectedCategory == "ALL" ) // Show only if there are highest spending categories
+            Text(
+              'Categories where you spent the most: $highestSpendingCategory',
+              // Display the categories
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
         ],
       ),
     );
+  }
+
+  String? _getHighestSpendingCategory(
+      List<Expense> expenses, DateTime selectedDate, String? selectedMonth) {
+    final filteredExpenses = expenses.where((expense) {
+      final isSameYear = expense.date.year == selectedDate.year;
+      final isSameMonth = selectedMonth == null ||
+          DateFormat('MMM').format(expense.date) == selectedMonth;
+      return isSameYear && isSameMonth;
+    }).toList();
+
+    if (filteredExpenses.isEmpty) return null;
+
+    final categoryTotals = <String, double>{};
+    for (final expense in filteredExpenses) {
+      categoryTotals.update(
+        expense.category,
+        (existingTotal) => existingTotal + expense.cost,
+        ifAbsent: () => expense.cost,
+      );
+    }
+
+    double highestTotal = 0;
+    List<String> highestCategories =
+        []; // Use a list to store multiple categories
+
+    categoryTotals.forEach((category, total) {
+      if (total > highestTotal) {
+        highestTotal = total;
+        highestCategories = [category]; // Start a new list
+      } else if (total == highestTotal) {
+        highestCategories.add(category); // Add to the existing list
+      }
+    });
+
+    return highestCategories.isNotEmpty
+        ? highestCategories.join(', ')
+        : null; // Return a comma-separated string or null
   }
 
   double _getTotalAmount(List<Expense> expenses, String selectedCategory,
