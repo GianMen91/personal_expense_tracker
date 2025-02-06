@@ -1,6 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import '../../models/expense.dart';
 import '../../repositories/database_helper.dart'; // Import your database helper
 import 'expenses_event.dart';
 import 'expenses_state.dart';
@@ -22,7 +20,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     try {
       final expenses = await dbHelper.getExpenses();
       emit(state.copyWith(expenses: expenses, isLoading: false));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
@@ -32,7 +30,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
       await dbHelper.addExpense(event.expense);
       final expenses = await dbHelper.getExpenses();
       emit(state.copyWith(expenses: expenses));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }
@@ -42,7 +40,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
       await dbHelper.deleteExpense(event.expense.id!);
       final expenses = await dbHelper.getExpenses();
       emit(state.copyWith(expenses: expenses));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }
