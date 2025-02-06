@@ -21,7 +21,7 @@ class StatisticScreen extends StatelessWidget {
         }
 
         final monthlyData = _getMonthlyData(state.expenses, state.selectedDate);
-        final totalAmount = _getCategoryTotal(state.expenses, state.selectedCategory);
+        final totalAmount = _getCategoryTotal(state.expenses, state.selectedCategory,state.selectedDate);
         final filteredExpenses = _getFilteredExpenses(state.expenses, state.selectedCategory, state.selectedDate);
 
         return Container(
@@ -30,7 +30,7 @@ class StatisticScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTotalExpenseCard(totalAmount),
+                _buildTotalExpenseCard(totalAmount, state.selectedCategory, state.selectedDate),
                 _buildYearSelector(context, state.selectedDate),
                 _buildMonthlyChart(monthlyData, context),
                 _buildCategorySelector(context, state.selectedCategory),
@@ -43,7 +43,11 @@ class StatisticScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTotalExpenseCard(double totalAmount) {
+
+  Widget _buildTotalExpenseCard(double totalAmount, String selectedCategory, DateTime selectedDate) {
+    final displayMonth = selectedDate.month != DateTime.now().month ? DateFormat('MMMM').format(selectedDate) : '';
+    final displayYear = DateFormat('yyyy').format(selectedDate);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -67,13 +71,14 @@ class StatisticScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            DateFormat('MMMM, yyyy').format(DateTime.now()),
+            displayMonth.isNotEmpty ? '$displayMonth, $displayYear' : displayYear,
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ],
       ),
     );
   }
+
 
   List<MapEntry<String, double>> _getMonthlyData(List<Expense> expenses, DateTime selectedDate) {
     final Map<String, double> monthlyData = {
@@ -90,12 +95,14 @@ class StatisticScreen extends StatelessWidget {
     return monthlyData.entries.toList();
   }
 
-  double _getCategoryTotal(List<Expense> expenses, String selectedCategory) {
-    if (selectedCategory == "ALL") {
-      return expenses.fold(0, (sum, expense) => sum + expense.cost);
-    }
+  double _getCategoryTotal(List<Expense> expenses, String selectedCategory, DateTime selectedDate) {
     return expenses
-        .where((expense) => expense.category == selectedCategory)
+        .where((expense) {
+      final isSameYear = expense.date.year == selectedDate.year;
+      final isSameMonth = expense.date.month == selectedDate.month || selectedDate.month == 0;
+      final isSameCategory = selectedCategory == "ALL" || expense.category == selectedCategory;
+      return isSameYear && isSameMonth && isSameCategory;
+    })
         .fold(0, (sum, expense) => sum + expense.cost);
   }
 
@@ -145,7 +152,6 @@ class StatisticScreen extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: monthlyData.map((entry) {
-            final isCurrentMonth = entry.key == DateFormat('MMM').format(DateTime.now());
             final heightPercent = maxAmount > 0 ? entry.value / maxAmount : 0;
 
             return Padding(
@@ -162,7 +168,9 @@ class StatisticScreen extends StatelessWidget {
                         width: 30,
                         height: 120 * heightPercent.toDouble(),
                         decoration: BoxDecoration(
-                          color: isCurrentMonth ? Colors.orange : kThemeColor.withOpacity(0.2),
+                          color: entry.key == DateFormat('MMM').format(context.read<ExpensesBloc>().state.selectedDate)
+                              ? Colors.orange
+                              :  kThemeColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
@@ -178,6 +186,7 @@ class StatisticScreen extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildCategorySelector(BuildContext context, String selectedCategory) {
     final categories = ["ALL", ...ExpenseCategories.categories.map((c) => c.title)];
