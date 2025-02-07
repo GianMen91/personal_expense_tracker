@@ -18,51 +18,63 @@ class StatisticScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ExpensesListBloc, ExpensesListState>(
-      builder: (context, listState) {
-        return BlocBuilder<ExpensesStatBloc, ExpensesStatState>(
-          builder: (context, statState) {
-            if (listState.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (listState.errorMessage != null) {
-              return Center(child: Text(listState.errorMessage!));
-            }
+        builder: (context, listState) {
+      return BlocBuilder<ExpensesStatBloc, ExpensesStatState>(
+        builder: (context, statState) {
+          if (listState.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (listState.errorMessage != null) {
+            return Center(child: Text(listState.errorMessage!));
+          }
 
-            final monthlyData = _getMonthlyData(listState.expenses, statState.selectedDate);
-            final totalAmount = _getTotalAmount(listState.expenses,
-                statState.selectedCategory, statState.selectedDate, statState.selectedMonth);
-            final filteredExpenses = _getFilteredExpenses(listState.expenses,
-                statState.selectedCategory, statState.selectedDate, statState.selectedMonth);
+          final expensesStatBloc =
+              context.read<ExpensesStatBloc>(); // Get the bloc instance
 
-            return Container(
-              color: const Color(0xFFF5F5F5),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTotalExpenseCard(totalAmount, statState.selectedDate,
-                        statState.selectedCategory, statState.selectedMonth,listState.expenses),
-                    _buildYearSelector(context, statState.selectedDate),
-                    _buildMonthlyChart(monthlyData, context, statState.selectedMonth),
-                    _buildCategorySelector(context, statState.selectedCategory),
-                    _buildExpensesList(filteredExpenses, context),
-                  ],
-                ),
+          final filteredExpenses = expensesStatBloc.getFilteredExpenses(
+              listState.expenses, statState); // Use the bloc's function
+          final totalAmount =
+              expensesStatBloc.calculateTotalAmount(filteredExpenses);
+          final highestSpendingCategory =
+              expensesStatBloc.getHighestSpendingCategory(filteredExpenses,
+                  statState.selectedDate, statState.selectedMonth);
+          final monthlyData = expensesStatBloc.getMonthlyData(
+              listState.expenses, statState.selectedDate);
+
+          return Container(
+            color: const Color(0xFFF5F5F5),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTotalExpenseCard(
+                      totalAmount,
+                      statState.selectedDate,
+                      statState.selectedCategory,
+                      statState.selectedMonth,
+                      listState.expenses,
+                      highestSpendingCategory),
+                  _buildYearSelector(context, statState.selectedDate),
+                  _buildMonthlyChart(
+                      monthlyData, context, statState.selectedMonth),
+                  _buildCategorySelector(context, statState.selectedCategory),
+                  _buildExpensesList(filteredExpenses, context),
+                ],
               ),
-            );
-          },
-        );
-      });}
+            ),
+          );
+        },
+      );
+    });
+  }
 
-
-
-  Widget _buildTotalExpenseCard(double totalAmount, DateTime selectedDate,
-      String selectedCategory, String? selectedMonth, List<Expense> expenses) {
-    final highestSpendingCategory = _getHighestSpendingCategory(
-        expenses,
-        selectedDate,
-        selectedMonth); // Get highest spending category
-
+  Widget _buildTotalExpenseCard(
+      double totalAmount,
+      DateTime selectedDate,
+      String selectedCategory,
+      String? selectedMonth,
+      List<Expense> expenses,
+      String? highestSpendingCategory) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -81,18 +93,22 @@ class StatisticScreen extends StatelessWidget {
                 fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 10),
-          Text(selectedMonth != null ? 'Total Expenses $selectedMonth ${DateFormat('yyyy').format(selectedDate)}' :'Total Expenses ${DateFormat('yyyy').format(selectedDate)}',
+          Text(
+            selectedMonth != null
+                ? 'Total Expenses $selectedMonth ${DateFormat('yyyy').format(selectedDate)}'
+                : 'Total Expenses ${DateFormat('yyyy').format(selectedDate)}',
             style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
-          if (selectedCategory != "ALL" )
+          if (selectedCategory != "ALL")
             Text(
               selectedCategory,
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
           const SizedBox(height: 8), // Add some spacing
-          if (highestSpendingCategory !=
-              null && selectedCategory == "ALL" ) // Show only if there are highest spending categories
+          if (highestSpendingCategory != null &&
+              selectedCategory ==
+                  "ALL") // Show only if there are highest spending categories
             Text(
               'Categories where you spent the most: $highestSpendingCategory',
               // Display the categories
@@ -101,85 +117,6 @@ class StatisticScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String? _getHighestSpendingCategory(
-      List<Expense> expenses, DateTime selectedDate, String? selectedMonth) {
-    final filteredExpenses = expenses.where((expense) {
-      final isSameYear = expense.date.year == selectedDate.year;
-      final isSameMonth = selectedMonth == null ||
-          DateFormat('MMM').format(expense.date) == selectedMonth;
-      return isSameYear && isSameMonth;
-    }).toList();
-
-    if (filteredExpenses.isEmpty) return null;
-
-    final categoryTotals = <String, double>{};
-    for (final expense in filteredExpenses) {
-      categoryTotals.update(
-        expense.category,
-        (existingTotal) => existingTotal + expense.cost,
-        ifAbsent: () => expense.cost,
-      );
-    }
-
-    double highestTotal = 0;
-    List<String> highestCategories =
-        []; // Use a list to store multiple categories
-
-    categoryTotals.forEach((category, total) {
-      if (total > highestTotal) {
-        highestTotal = total;
-        highestCategories = [category]; // Start a new list
-      } else if (total == highestTotal) {
-        highestCategories.add(category); // Add to the existing list
-      }
-    });
-
-    return highestCategories.isNotEmpty
-        ? highestCategories.join(', ')
-        : null; // Return a comma-separated string or null
-  }
-
-  double _getTotalAmount(List<Expense> expenses, String selectedCategory,
-      DateTime selectedDate, String? selectedMonth) {
-    return expenses.where((expense) {
-      final isSameYear = expense.date.year == selectedDate.year;
-      final isSameMonth = selectedMonth == null ||
-          DateFormat('MMM').format(expense.date) == selectedMonth;
-      final isSameCategory =
-          selectedCategory == "ALL" || expense.category == selectedCategory;
-      return isSameYear && isSameMonth && isSameCategory;
-    }).fold(0, (sum, expense) => sum + expense.cost);
-  }
-
-  List<MapEntry<String, double>> _getMonthlyData(
-      List<Expense> expenses, DateTime selectedDate) {
-    final Map<String, double> monthlyData = {
-      for (var i = 1; i <= 12; i++)
-        DateFormat('MMM').format(DateTime(selectedDate.year, i)): 0.0
-    };
-
-    for (var expense in expenses) {
-      if (expense.date.year == selectedDate.year) {
-        final month = DateFormat('MMM').format(expense.date);
-        monthlyData[month] = monthlyData[month]! + expense.cost;
-      }
-    }
-
-    return monthlyData.entries.toList();
-  }
-
-  List<Expense> _getFilteredExpenses(List<Expense> expenses,
-      String selectedCategory, DateTime selectedDate, String? selectedMonth) {
-    return expenses.where((expense) {
-      final isSameYear = expense.date.year == selectedDate.year;
-      final isSameMonth = selectedMonth == null ||
-          DateFormat('MMM').format(expense.date) == selectedMonth;
-      final isSameCategory =
-          selectedCategory == "ALL" || expense.category == selectedCategory;
-      return isSameYear && isSameMonth && isSameCategory;
-    }).toList();
   }
 
   Widget _buildYearSelector(BuildContext context, DateTime selectedDate) {
@@ -279,7 +216,9 @@ class StatisticScreen extends StatelessWidget {
           final category = categories[index];
           return GestureDetector(
             onTap: () {
-              context.read<ExpensesStatBloc>().add(ChangeCategoryEvent(category));
+              context
+                  .read<ExpensesStatBloc>()
+                  .add(ChangeCategoryEvent(category));
             },
             child: _buildCategoryPill(category, category == selectedCategory),
           );
