@@ -3,92 +3,73 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../blocs/expenses/expenses_bloc.dart';
-import '../blocs/expenses/expenses_event.dart';
+import '../blocs/expense_form/expense_form_bloc.dart';
+import '../blocs/expense_form/expense_form_event.dart';
+import '../blocs/expense_form/expense_form_state.dart';
 import '../constants.dart';
-import '../models/expense.dart';
 import '../models/expense_category.dart';
 
 class NewExpenseScreen extends StatelessWidget {
   final ExpenseCategory category;
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _costController = TextEditingController();
-  final ValueNotifier<DateTime> _selectedDateNotifier =
-      ValueNotifier(DateTime.now());
-  final ValueNotifier<bool> _isFormValidNotifier = ValueNotifier(false);
 
-  NewExpenseScreen({super.key, required this.category}) {
-    // Add listeners to update form validity
-    _descriptionController.addListener(_updateFormValidity);
-    _costController.addListener(_updateFormValidity);
-  }
-
-  void _updateFormValidity() {
-    final isValid = _checkFormValidity();
-    _isFormValidNotifier.value = isValid;
-  }
-
-  bool _checkFormValidity() {
-    if (_costController.text.trim().isEmpty) return false;
-    final number = double.tryParse(_costController.text.replaceAll(',', '.'));
-    if (number == null || number <= 0) return false;
-    if (_descriptionController.text.trim().isEmpty) return false;
-    return true;
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2024),
-      lastDate: DateTime(2026),
-    );
-
-    if (picked != null) {
-      _selectedDateNotifier.value = picked;
-    }
-  }
-
-  bool get _isFormValid {
-    if (_costController.text.trim().isEmpty) return false;
-    final number = double.tryParse(_costController.text.replaceAll(',', '.'));
-    if (number == null || number <= 0) return false;
-    if (_descriptionController.text.trim().isEmpty) return false;
-    return true;
-  }
+  const NewExpenseScreen({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
+    return BlocBuilder<ExpenseFormBloc, ExpenseFormState>(
+        builder: (context, state) {
+      return Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
-        title: const Text('New Expense',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFF5F5F5),
+          title: const Text('New Expense',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-        children: [
-          _buildAmountInput(),
-          const SizedBox(height: 15),
-          _buildDescriptionInput(),
-          const SizedBox(height: 15),
-          _buildDatePicker(context),
-          const SizedBox(height: 15),
-          _buildCategoryCard(),
-          const SizedBox(height: 35),
-          _buildSaveButton(context),
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
+        body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+          children: [
+            _buildAmountInput(context),
+            const SizedBox(height: 15),
+            _buildDescriptionInput(context),
+            const SizedBox(height: 15),
+            _buildDatePicker(context),
+            const SizedBox(height: 15),
+            _buildCategoryCard(),
+            const SizedBox(height: 35),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: state.isValid ? kButtonColor : Colors.grey,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              onPressed: state.isValid
+                  ? () {
+                      context
+                          .read<ExpenseFormBloc>()
+                          .add(FormSubmitted(category));
+                      Navigator.pop(context);
+                      context.read<ExpenseFormBloc>().add(ResetForm()); // Reset the form
+                    }
+                  : null,
+              child: const Text(
+                "SAVE",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      );
+    });
   }
 
-  Widget _buildAmountInput() {
+  Widget _buildAmountInput(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: _boxDecoration(),
@@ -99,7 +80,6 @@ class NewExpenseScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
-              controller: _costController,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
@@ -110,6 +90,8 @@ class NewExpenseScreen extends StatelessWidget {
                 hintText: "0",
                 border: InputBorder.none,
               ),
+              onChanged: (value) =>
+                  context.read<ExpenseFormBloc>().add(CostChanged(value)),
             ),
           ),
         ],
@@ -117,12 +99,13 @@ class NewExpenseScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionInput() {
+  Widget _buildDescriptionInput(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: _boxDecoration(),
       child: TextField(
-        controller: _descriptionController,
+        onChanged: (value) =>
+            context.read<ExpenseFormBloc>().add(DescriptionChanged(value)),
         decoration: const InputDecoration(
           hintText: "Description",
           border: InputBorder.none,
@@ -132,27 +115,37 @@ class NewExpenseScreen extends StatelessWidget {
   }
 
   Widget _buildDatePicker(BuildContext context) {
-    return InkWell(
-      onTap: () => _selectDate(context),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        decoration: _boxDecoration(),
-        child: Row(
-          children: [
-            const Icon(Icons.calendar_today, color: Colors.grey),
-            const SizedBox(width: 10),
-            ValueListenableBuilder<DateTime>(
-              valueListenable: _selectedDateNotifier,
-              builder: (context, selectedDate, child) {
-                return Text(
-                  DateFormat('dd/MM/yyyy').format(selectedDate),
+    return BlocBuilder<ExpenseFormBloc, ExpenseFormState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () async {
+            final pickedDate = await showDatePicker(
+              context: context,
+              initialDate: state.date,
+              firstDate: DateTime(2024),
+              lastDate: DateTime(2026),
+            );
+
+            if (pickedDate != null) {
+              context.read<ExpenseFormBloc>().add(DateChanged(pickedDate));
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            decoration: _boxDecoration(),
+            child: Row(
+              children: [
+                const Icon(Icons.calendar_today, color: Colors.grey),
+                const SizedBox(width: 10),
+                Text(
+                  DateFormat('dd/MM/yyyy').format(state.date),
                   style: const TextStyle(fontSize: 18),
-                );
-              },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -171,44 +164,6 @@ class NewExpenseScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildSaveButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ValueListenableBuilder<bool>(
-        valueListenable: _isFormValidNotifier,
-        builder: (context, isValid, child) {
-          return ElevatedButton(
-            onPressed: isValid ? () => _saveExpense(context) : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isValid ? kButtonColor : Colors.grey,
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            child: const Text(
-              "SAVE",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _saveExpense(BuildContext context) {
-    if (_isFormValid) {
-      final expense = Expense(
-        category: category.title,
-        description: _descriptionController.text,
-        cost: double.tryParse(_costController.text.replaceAll(',', '.')) ?? 0.0,
-        date: _selectedDateNotifier.value,
-      );
-      context.read<ExpensesBloc>().add(AddExpense(expense));
-      Navigator.pop(context);
-    }
   }
 
   BoxDecoration _boxDecoration() {
