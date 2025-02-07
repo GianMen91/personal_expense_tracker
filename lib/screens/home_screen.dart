@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_expense_tracker/constants.dart';
-import 'package:personal_expense_tracker/models/expense_categories.dart';
 import 'package:personal_expense_tracker/screens/expenses_list_screen.dart';
 import 'package:personal_expense_tracker/screens/statistic_screen.dart';
+import 'package:personal_expense_tracker/widgets/chose_category_dialog.dart';
 import '../blocs/navigation/navigation_bloc.dart';
 import '../blocs/navigation/navigation_event.dart';
 import '../blocs/navigation/navigation_state.dart';
 import '../widgets/bottom_menu.dart';
-import '../widgets/category_item.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -59,29 +58,9 @@ class HomeScreen extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Category'),
-          content: SizedBox(
-            height: 300.0,
-            width: 300.0,
-            child: ListView.builder(
-              itemCount: ExpenseCategories.categories.length,
-              itemBuilder: (context, index) {
-                final category = ExpenseCategories.categories[index];
-                return CategoryItem(category: category);
-              },
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        return ChoseCategoryDialog();
       },
     );
   }
 }
+
