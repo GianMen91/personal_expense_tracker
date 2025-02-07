@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses/expenses_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses/expenses_state.dart';
 
-import '../blocs/expenses/expenses_event.dart';
+import '../blocs/expense_list/expense_list_bloc.dart';
+import '../blocs/expense_list/expense_list_event.dart';
+import '../blocs/expense_list/expense_list_state.dart';
 import '../widgets/expense_card.dart';
 
 import '../constants.dart';
@@ -15,7 +15,7 @@ class ExpensesListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
-        body: BlocBuilder<ExpensesBloc, ExpensesState>(
+        body: BlocBuilder<ExpensesListBloc, ExpensesListState>(
           builder: (context, state) {
             if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -55,7 +55,7 @@ class ExpensesListScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         const Text('Total expense this month',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 18)),
+                            TextStyle(color: Colors.white, fontSize: 18)),
                       ],
                     ),
                   ),
@@ -64,14 +64,14 @@ class ExpensesListScreen extends StatelessWidget {
                       itemCount: state.groupedExpenses.length,
                       itemBuilder: (context, index) {
                         final date =
-                            state.groupedExpenses.keys.elementAt(index);
+                        state.groupedExpenses.keys.elementAt(index);
                         final expenses = state.groupedExpenses[date]!;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              const EdgeInsets.symmetric(vertical: 8.0),
                               child: Text(date,
                                   style: TextStyle(
                                       fontSize: 14,
@@ -82,7 +82,7 @@ class ExpensesListScreen extends StatelessWidget {
                                 expense: expense,
                                 onDelete: (expense) {
                                   context
-                                      .read<ExpensesBloc>()
+                                      .read<ExpensesListBloc>()
                                       .add(DeleteExpense(expense));
                                 })),
                           ],

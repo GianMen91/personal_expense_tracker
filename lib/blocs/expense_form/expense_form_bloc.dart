@@ -2,14 +2,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/expense.dart';
 import '../../models/expense_validation_service.dart';
-import '../expenses/expenses_bloc.dart';
-import '../expenses/expenses_event.dart';
+import '../expense_list/expense_list_bloc.dart';
+import '../expense_list/expense_list_event.dart';
 import 'expense_form_event.dart';
 import 'expense_form_state.dart';
 
 class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
   final ExpenseValidationService validationService;
-  final ExpensesBloc expensesBloc;
+  final ExpensesListBloc expensesBloc;
 
   ExpenseFormBloc({
     required this.validationService,

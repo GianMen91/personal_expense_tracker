@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_expense_tracker/blocs/expenses/expenses_bloc.dart';
-import 'package:personal_expense_tracker/blocs/expenses/expenses_state.dart';
 import 'package:personal_expense_tracker/models/expense.dart';
 import 'package:personal_expense_tracker/models/expense_categories.dart';
 import 'package:personal_expense_tracker/widgets/expense_card.dart';
-import '../blocs/expenses/expenses_event.dart';
+import '../blocs/expense_list/expense_list_bloc.dart';
+import '../blocs/expense_list/expense_list_event.dart';
+import '../blocs/expense_list/expense_list_state.dart';
+import '../blocs/expenses_stat/expenses_stat_bloc.dart';
+import '../blocs/expenses_stat/expenses_stat_event.dart';
+import '../blocs/expenses_stat/expenses_stat_state.dart';
 import '../constants.dart';
 
 class StatisticScreen extends StatelessWidget {
@@ -14,37 +17,44 @@ class StatisticScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExpensesBloc, ExpensesState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return BlocBuilder<ExpensesListBloc, ExpensesListState>(
+      builder: (context, listState) {
+        return BlocBuilder<ExpensesStatBloc, ExpensesStatState>(
+          builder: (context, statState) {
+            if (listState.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (listState.errorMessage != null) {
+              return Center(child: Text(listState.errorMessage!));
+            }
 
-        final monthlyData = _getMonthlyData(state.expenses, state.selectedDate);
-        final totalAmount = _getTotalAmount(state.expenses,
-            state.selectedCategory, state.selectedDate, state.selectedMonth);
-        final filteredExpenses = _getFilteredExpenses(state.expenses,
-            state.selectedCategory, state.selectedDate, state.selectedMonth);
+            final monthlyData = _getMonthlyData(listState.expenses, statState.selectedDate);
+            final totalAmount = _getTotalAmount(listState.expenses,
+                statState.selectedCategory, statState.selectedDate, statState.selectedMonth);
+            final filteredExpenses = _getFilteredExpenses(listState.expenses,
+                statState.selectedCategory, statState.selectedDate, statState.selectedMonth);
 
-        return Container(
-          color: const Color(0xFFF5F5F5),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTotalExpenseCard(totalAmount, state.selectedDate,
-                    state.selectedCategory, state.selectedMonth,state.expenses),
-                _buildYearSelector(context, state.selectedDate),
-                _buildMonthlyChart(monthlyData, context, state.selectedMonth),
-                _buildCategorySelector(context, state.selectedCategory),
-                _buildExpensesList(filteredExpenses, context),
-              ],
-            ),
-          ),
+            return Container(
+              color: const Color(0xFFF5F5F5),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTotalExpenseCard(totalAmount, statState.selectedDate,
+                        statState.selectedCategory, statState.selectedMonth,listState.expenses),
+                    _buildYearSelector(context, statState.selectedDate),
+                    _buildMonthlyChart(monthlyData, context, statState.selectedMonth),
+                    _buildCategorySelector(context, statState.selectedCategory),
+                    _buildExpensesList(filteredExpenses, context),
+                  ],
+                ),
+              ),
+            );
+          },
         );
-      },
-    );
-  }
+      });}
+
+
 
   Widget _buildTotalExpenseCard(double totalAmount, DateTime selectedDate,
       String selectedCategory, String? selectedMonth, List<Expense> expenses) {
@@ -179,7 +189,7 @@ class StatisticScreen extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.arrow_left, size: 30),
           onPressed: () {
-            context.read<ExpensesBloc>().add(ChangeYearEvent(-1));
+            context.read<ExpensesStatBloc>().add(ChangeYearEvent(-1));
           },
         ),
         Text(
@@ -189,7 +199,7 @@ class StatisticScreen extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.arrow_right, size: 30),
           onPressed: () {
-            context.read<ExpensesBloc>().add(ChangeYearEvent(1));
+            context.read<ExpensesStatBloc>().add(ChangeYearEvent(1));
           },
         ),
       ],
@@ -220,7 +230,7 @@ class StatisticScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GestureDetector(
                 onTap: () {
-                  context.read<ExpensesBloc>().add(
+                  context.read<ExpensesStatBloc>().add(
                       ChangeMonthSelectionEvent(isSelected ? null : entry.key));
                 },
                 child: Column(
@@ -269,7 +279,7 @@ class StatisticScreen extends StatelessWidget {
           final category = categories[index];
           return GestureDetector(
             onTap: () {
-              context.read<ExpensesBloc>().add(ChangeCategoryEvent(category));
+              context.read<ExpensesStatBloc>().add(ChangeCategoryEvent(category));
             },
             child: _buildCategoryPill(category, category == selectedCategory),
           );
@@ -289,7 +299,7 @@ class StatisticScreen extends StatelessWidget {
         return ExpenseCard(
           expense: expense,
           onDelete: (expense) {
-            context.read<ExpensesBloc>().add(DeleteExpense(expense));
+            context.read<ExpensesListBloc>().add(DeleteExpense(expense));
           },
         );
       },
