@@ -7,6 +7,8 @@ class ExpensesState {
   final String selectedCategory;
   final DateTime selectedDate;
   final String? selectedMonth;
+  final Map<String, List<Expense>> groupedExpenses;
+  final double monthlyTotal;
 
   ExpensesState({
     required this.expenses,
@@ -15,6 +17,8 @@ class ExpensesState {
     this.selectedCategory = "ALL",
     required this.selectedDate,
     this.selectedMonth,
+    required this.groupedExpenses,
+    required this.monthlyTotal,
   });
 
   ExpensesState copyWith({
@@ -24,6 +28,8 @@ class ExpensesState {
     String? selectedCategory,
     DateTime? selectedDate,
     String? selectedMonth,
+    Map<String, List<Expense>>? groupedExpenses,
+    double? monthlyTotal,
   }) {
     return ExpensesState(
       expenses: expenses ?? this.expenses,
@@ -32,6 +38,8 @@ class ExpensesState {
       selectedCategory: selectedCategory ?? this.selectedCategory,
       selectedDate: selectedDate ?? this.selectedDate,
       selectedMonth: selectedMonth,
+      groupedExpenses: groupedExpenses ?? this.groupedExpenses,
+      monthlyTotal: monthlyTotal ?? this.monthlyTotal,
     );
   }
 }
