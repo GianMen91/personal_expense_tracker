@@ -40,35 +40,37 @@ class NewExpenseScreen extends StatelessWidget {
             const SizedBox(height: 15),
             _buildCategoryCard(),
             const SizedBox(height: 35),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: state.isValid ? kButtonColor : Colors.grey,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              onPressed: state.isValid
-                  ? () {
-                      context
-                          .read<ExpenseFormBloc>()
-                          .add(FormSubmitted(category));
-                      Navigator.pop(context);
-                      context
-                          .read<ExpenseFormBloc>()
-                          .add(ResetForm()); // Reset the form
-                    }
-                  : null,
-              child: const Text(
-                "SAVE",
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
+            _buildSaveButton(state, context),
             const SizedBox(height: 20),
           ],
         ),
       );
     });
+  }
+
+  Widget _buildSaveButton(ExpenseFormState state, BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: state.isValid ? kButtonColor : Colors.grey,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+      onPressed: state.isValid
+          ? () {
+              context.read<ExpenseFormBloc>().add(FormSubmitted(category));
+              Navigator.pop(context);
+              context
+                  .read<ExpenseFormBloc>()
+                  .add(ResetForm()); // Reset the form
+            }
+          : null,
+      child: const Text(
+        "SAVE",
+        style: TextStyle(fontSize: 18, color: Colors.white),
+      ),
+    );
   }
 
   Widget _buildAmountInput(BuildContext context) {
