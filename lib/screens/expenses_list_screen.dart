@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/expense_list/expense_list_bloc.dart';
-import '../blocs/expense_list/expense_list_event.dart';
 import '../blocs/expense_list/expense_list_state.dart';
-import '../widgets/expense_card.dart';
 
 import '../constants.dart';
+import '../widgets/expense_list.dart';
 
 class ExpensesListScreen extends StatelessWidget {
   const ExpensesListScreen({super.key});
@@ -60,35 +59,7 @@ class ExpensesListScreen extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: state.groupedExpenses.length,
-                      itemBuilder: (context, index) {
-                        final date =
-                            state.groupedExpenses.keys.elementAt(index);
-                        final expenses = state.groupedExpenses[date]!;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text(date,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey[600])),
-                            ),
-                            ...expenses.map((expense) => ExpenseCard(
-                                expense: expense,
-                                onDelete: (expense) {
-                                  context
-                                      .read<ExpensesListBloc>()
-                                      .add(DeleteExpense(expense));
-                                })),
-                          ],
-                        );
-                      },
-                    ),
+                    child: ExpenseList(groupedExpenses: state.groupedExpenses),
                   ),
                 ],
               ),
@@ -97,3 +68,5 @@ class ExpensesListScreen extends StatelessWidget {
         ));
   }
 }
+
+

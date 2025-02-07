@@ -3,14 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_expense_tracker/models/expense.dart';
 import 'package:personal_expense_tracker/models/expense_categories.dart';
-import 'package:personal_expense_tracker/widgets/expense_card.dart';
 import '../blocs/expense_list/expense_list_bloc.dart';
-import '../blocs/expense_list/expense_list_event.dart';
 import '../blocs/expense_list/expense_list_state.dart';
 import '../blocs/expenses_stat/expenses_stat_bloc.dart';
 import '../blocs/expenses_stat/expenses_stat_event.dart';
 import '../blocs/expenses_stat/expenses_stat_state.dart';
 import '../constants.dart';
+import '../widgets/expense_card_list.dart';
 
 class StatisticScreen extends StatelessWidget {
   const StatisticScreen({super.key});
@@ -58,7 +57,7 @@ class StatisticScreen extends StatelessWidget {
                   _buildMonthlyChart(
                       monthlyData, context, statState.selectedMonth),
                   _buildCategorySelector(context, statState.selectedCategory),
-                  _buildExpensesList(filteredExpenses, context),
+                  ExpenseCardsList(expenses: filteredExpenses),
                 ],
               ),
             ),
@@ -227,23 +226,7 @@ class StatisticScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildExpensesList(List<Expense> expenses, BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: expenses.length,
-      itemBuilder: (context, index) {
-        final expense = expenses[index];
-        return ExpenseCard(
-          expense: expense,
-          onDelete: (expense) {
-            context.read<ExpensesListBloc>().add(DeleteExpense(expense));
-          },
-        );
-      },
-    );
-  }
+
 
   Widget _buildCategoryPill(String title, bool isSelected) {
     return Container(
