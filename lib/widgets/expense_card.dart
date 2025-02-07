@@ -15,30 +15,31 @@ class ExpenseCard extends StatelessWidget {
 
     return Dismissible(
       key: Key(expense.id.toString()),
-      direction: DismissDirection.endToStart, // Swipe from right to left
+      direction: DismissDirection.endToStart,
+      // Swipe from right to left
       onDismissed: (direction) {
         onDelete(expense); // Call onDelete function when dismissed
       },
       confirmDismiss: (direction) async {
         return await showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Are you sure?'),
-              content: const Text('Do you want to delete this expense?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Delete'),
-                ),
-              ],
-            );
-          },
-        ) ??
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Are you sure?'),
+                  content: const Text('Do you want to delete this expense?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                );
+              },
+            ) ??
             false; // If the user cancels, return false
       },
       background: Container(

@@ -13,4 +13,3 @@ class ExpenseCategory {
     required this.color,
   });
 }
-

@@ -1,5 +1,3 @@
-import '../../models/expense.dart';
-
 class ExpensesStatState {
   final String selectedCategory;
   final DateTime selectedDate;

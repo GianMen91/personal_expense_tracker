@@ -8,7 +8,7 @@ import 'expenses_stat_state.dart';
 class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
   ExpensesStatBloc()
       : super(ExpensesStatState(
-            selectedDate: DateTime.now(), selectedCategory: "ALL")) {
+            selectedDate: DateTime.now())) {
     on<ChangeCategoryEvent>(_onChangeCategory);
     on<ChangeYearEvent>(_onChangeYear);
     on<ChangeMonthSelectionEvent>(_onChangeMonthSelection);
@@ -16,7 +16,8 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
 
   void _onChangeCategory(
       ChangeCategoryEvent event, Emitter<ExpensesStatState> emit) {
-    emit(state.copyWith(selectedCategory: event.category));
+    emit(state.copyWith(
+        selectedCategory: event.category, selectedMonth: state.selectedMonth));
   }
 
   void _onChangeYear(ChangeYearEvent event, Emitter<ExpensesStatState> emit) {

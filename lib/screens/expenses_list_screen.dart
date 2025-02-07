@@ -55,7 +55,7 @@ class ExpensesListScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         const Text('Total expense this month',
                             style:
-                            TextStyle(color: Colors.white, fontSize: 18)),
+                                TextStyle(color: Colors.white, fontSize: 18)),
                       ],
                     ),
                   ),
@@ -64,14 +64,14 @@ class ExpensesListScreen extends StatelessWidget {
                       itemCount: state.groupedExpenses.length,
                       itemBuilder: (context, index) {
                         final date =
-                        state.groupedExpenses.keys.elementAt(index);
+                            state.groupedExpenses.keys.elementAt(index);
                         final expenses = state.groupedExpenses[date]!;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: Text(date,
                                   style: TextStyle(
                                       fontSize: 14,

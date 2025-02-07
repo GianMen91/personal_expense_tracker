@@ -15,10 +15,12 @@ void main() {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ExpensesListBloc(DatabaseHelper.instance)..add(LoadExpense()),
+          create: (context) =>
+              ExpensesListBloc(DatabaseHelper.instance)..add(LoadExpense()),
         ),
         BlocProvider(
-          create: (context) => ExpensesStatBloc(), // No expensesBloc dependency here
+          create: (context) =>
+              ExpensesStatBloc(), // No expensesBloc dependency here
         ),
         BlocProvider(
           create: (context) => NavigationBloc(),

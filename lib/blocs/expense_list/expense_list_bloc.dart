@@ -25,7 +25,7 @@ class ExpensesListBloc extends Bloc<ExpensesListEvent, ExpensesListState> {
       final expenses = await dbHelper.getExpenses();
       emit(_updateStateWithDerivedData(
           state.copyWith(expenses: expenses, isLoading: false)));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
@@ -36,7 +36,7 @@ class ExpensesListBloc extends Bloc<ExpensesListEvent, ExpensesListState> {
       await dbHelper.addExpense(event.expense);
       final expenses = await dbHelper.getExpenses();
       emit(_updateStateWithDerivedData(state.copyWith(expenses: expenses)));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }
@@ -47,7 +47,7 @@ class ExpensesListBloc extends Bloc<ExpensesListEvent, ExpensesListState> {
       await dbHelper.deleteExpense(event.expense.id!);
       final expenses = await dbHelper.getExpenses();
       emit(_updateStateWithDerivedData(state.copyWith(expenses: expenses)));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }

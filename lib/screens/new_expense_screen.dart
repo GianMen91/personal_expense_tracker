@@ -54,7 +54,9 @@ class NewExpenseScreen extends StatelessWidget {
                           .read<ExpenseFormBloc>()
                           .add(FormSubmitted(category));
                       Navigator.pop(context);
-                      context.read<ExpenseFormBloc>().add(ResetForm()); // Reset the form
+                      context
+                          .read<ExpenseFormBloc>()
+                          .add(ResetForm()); // Reset the form
                     }
                   : null,
               child: const Text(

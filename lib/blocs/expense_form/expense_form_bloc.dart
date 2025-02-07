@@ -11,10 +11,8 @@ class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
   final ExpenseValidationService validationService;
   final ExpensesListBloc expensesBloc;
 
-  ExpenseFormBloc({
-    required this.validationService,
-    required this.expensesBloc
-  }) : super(ExpenseFormState()) {
+  ExpenseFormBloc({required this.validationService, required this.expensesBloc})
+      : super(ExpenseFormState()) {
     on<DescriptionChanged>(_onDescriptionChanged);
     on<CostChanged>(_onCostChanged);
     on<DateChanged>(_onDateChanged);
@@ -22,12 +20,12 @@ class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
     on<ResetForm>(_onResetForm);
   }
 
-  void _onDescriptionChanged(DescriptionChanged event, Emitter<ExpenseFormState> emit) {
+  void _onDescriptionChanged(
+      DescriptionChanged event, Emitter<ExpenseFormState> emit) {
     final cost = double.tryParse(state.cost.replaceAll(',', '.')) ?? 0;
     final newState = state.copyWith(
         description: event.description,
-        isValid: validationService.isValidExpense(event.description, cost)
-    );
+        isValid: validationService.isValidExpense(event.description, cost));
     emit(newState);
   }
 
@@ -35,8 +33,7 @@ class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
     final cost = double.tryParse(event.cost.replaceAll(',', '.')) ?? 0;
     final newState = state.copyWith(
         cost: event.cost,
-        isValid: validationService.isValidExpense(state.description, cost)
-    );
+        isValid: validationService.isValidExpense(state.description, cost));
     emit(newState);
   }
 

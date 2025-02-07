@@ -27,7 +27,8 @@ class HomeScreen extends StatelessWidget {
             ),
             backgroundColor: const Color(0xFFF5F5F5),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(
             backgroundColor: kButtonColor,
             shape: const CircleBorder(),
@@ -46,7 +47,9 @@ class HomeScreen extends StatelessWidget {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.home,
-                        color: state.currentIndex == 0 ? kThemeColor : Colors.grey),
+                        color: state.currentIndex == 0
+                            ? kThemeColor
+                            : Colors.grey),
                     onPressed: () {
                       context.read<NavigationBloc>().add(ChangePage(0));
                       _myPage.jumpToPage(0);
@@ -54,7 +57,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.bar_chart,
-                        color: state.currentIndex == 1 ? kThemeColor : Colors.grey),
+                        color: state.currentIndex == 1
+                            ? kThemeColor
+                            : Colors.grey),
                     onPressed: () {
                       context.read<NavigationBloc>().add(ChangePage(1));
                       _myPage.jumpToPage(1);

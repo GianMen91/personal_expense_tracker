@@ -5,5 +5,8 @@ class ExpenseData {
   final double monthlyTotal;
   final List<Expense> expenses;
 
-  ExpenseData({required this.groupedExpenses, required this.monthlyTotal, required this.expenses});
+  ExpenseData(
+      {required this.groupedExpenses,
+      required this.monthlyTotal,
+      required this.expenses});
 }
