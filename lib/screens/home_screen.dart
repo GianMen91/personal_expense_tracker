@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_expense_tracker/constants.dart';
-import 'package:personal_expense_tracker/models/expense_category.dart';
 import 'package:personal_expense_tracker/models/expense_categories.dart';
 import 'package:personal_expense_tracker/screens/expenses_list_screen.dart';
 import 'package:personal_expense_tracker/screens/statistic_screen.dart';
 import '../blocs/navigation/navigation_bloc.dart';
 import '../blocs/navigation/navigation_event.dart';
 import '../blocs/navigation/navigation_state.dart';
-import 'new_expense_screen.dart';
+import '../widgets/bottom_menu.dart';
+import '../widgets/category_item.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -37,38 +37,8 @@ class HomeScreen extends StatelessWidget {
             },
             child: const Icon(Icons.add, color: Colors.white, size: 28),
           ),
-          bottomNavigationBar: BottomAppBar(
-            color: kBottomNavigationBarColor,
-            shape: const CircularNotchedRectangle(),
-            child: SizedBox(
-              height: 75,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.home,
-                        color: state.currentIndex == 0
-                            ? kThemeColor
-                            : Colors.grey),
-                    onPressed: () {
-                      context.read<NavigationBloc>().add(ChangePage(0));
-                      _myPage.jumpToPage(0);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.bar_chart,
-                        color: state.currentIndex == 1
-                            ? kThemeColor
-                            : Colors.grey),
-                    onPressed: () {
-                      context.read<NavigationBloc>().add(ChangePage(1));
-                      _myPage.jumpToPage(1);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+          bottomNavigationBar:
+              BottomMenu(myPage: _myPage, currentIndex: state.currentIndex),
           body: PageView(
             controller: _myPage,
             onPageChanged: (int index) {
@@ -98,7 +68,7 @@ class HomeScreen extends StatelessWidget {
               itemCount: ExpenseCategories.categories.length,
               itemBuilder: (context, index) {
                 final category = ExpenseCategories.categories[index];
-                return _buildCategoryItem(context, category);
+                return CategoryItem(category: category);
               },
             ),
           ),
@@ -110,25 +80,6 @@ class HomeScreen extends StatelessWidget {
               },
             ),
           ],
-        );
-      },
-    );
-  }
-
-  Widget _buildCategoryItem(BuildContext context, ExpenseCategory category) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: category.color,
-        child: Icon(category.icon, color: Colors.white),
-      ),
-      title: Text(category.title),
-      onTap: () {
-        Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewExpenseScreen(category: category),
-          ),
         );
       },
     );
