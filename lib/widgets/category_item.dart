@@ -11,18 +11,27 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: CategoryAvatar(category: category),
-      title: Text(category.title),
-      onTap: () {
-        Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewExpenseScreen(category: category),
-          ),
-        );
-      },
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        decoration:BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+
+      child: ListTile(
+        leading: CategoryAvatar(category: category),
+        title: Text(category.title),
+        onTap: () {
+          Navigator.of(context).pop();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewExpenseScreen(category: category),
+            ),
+          );
+        },
+      ),
     );
   }
 }
+

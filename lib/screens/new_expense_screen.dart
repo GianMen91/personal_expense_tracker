@@ -39,7 +39,7 @@ class NewExpenseScreen extends StatelessWidget {
             const SizedBox(height: 15),
             _buildDatePicker(context),
             const SizedBox(height: 15),
-            _buildCategoryCard(),
+            CategoryItem(category: category),
             const SizedBox(height: 35),
             _buildSaveButton(state, context),
             const SizedBox(height: 20),
@@ -154,13 +154,7 @@ class NewExpenseScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      decoration: _boxDecoration(),
-      child: CategoryItem(category: category),
-    );
-  }
+
 
   BoxDecoration _boxDecoration() {
     return BoxDecoration(
