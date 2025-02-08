@@ -5,7 +5,7 @@ import '../blocs/expense_list/expense_list_bloc.dart';
 import '../blocs/expense_list/expense_list_state.dart';
 
 import '../widgets/expense_list.dart';
-import '../widgets/monthly_total_expense_card.dart';
+import '../widgets/total_expense_card.dart';
 
 class ExpensesListScreen extends StatelessWidget {
   const ExpensesListScreen({super.key});
@@ -24,7 +24,10 @@ class ExpensesListScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
-                  MonthlyTotalExpenseCard(monthlyTotal: state.monthlyTotal),
+                  TotalExpenseCard(
+                    totalAmount: state.monthlyTotal,
+                    title: 'Total expense this month',
+                  ),
                   Expanded(
                     child: ExpenseList(groupedExpenses: state.groupedExpenses),
                   ),

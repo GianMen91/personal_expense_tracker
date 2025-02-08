@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_expense_tracker/models/expense.dart';
-import 'package:personal_expense_tracker/models/expense_categories.dart';
 import '../blocs/expense_list/expense_list_bloc.dart';
 import '../blocs/expense_list/expense_list_state.dart';
 import '../blocs/expenses_stat/expenses_stat_bloc.dart';
-import '../blocs/expenses_stat/expenses_stat_event.dart';
 import '../blocs/expenses_stat/expenses_stat_state.dart';
-import '../constants.dart';
 import '../widgets/category_selector.dart';
 import '../widgets/expense_card_list.dart';
 import '../widgets/monthly_chart.dart';
+import '../widgets/total_expense_card.dart';
 import '../widgets/year_selector.dart';
 
 class StatisticScreen extends StatelessWidget {
@@ -60,7 +58,8 @@ class StatisticScreen extends StatelessWidget {
                   MonthlyChart(
                       monthlyData: monthlyData,
                       selectedMonth: statState.selectedMonth),
-                  CategorySelector(selectedCategory: statState.selectedCategory),
+                  CategorySelector(
+                      selectedCategory: statState.selectedCategory),
                   ExpenseCardsList(expenses: filteredExpenses),
                 ],
               ),
@@ -78,46 +77,15 @@ class StatisticScreen extends StatelessWidget {
       String? selectedMonth,
       List<Expense> expenses,
       String? highestSpendingCategory) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: kThemeColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          Text(
-            '${totalAmount.toStringAsFixed(2)} €',
-            style: const TextStyle(
-                fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            selectedMonth != null
-                ? 'Total Expenses $selectedMonth ${DateFormat('yyyy').format(selectedDate)}'
-                : 'Total Expenses ${DateFormat('yyyy').format(selectedDate)}',
-            style: const TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          const SizedBox(height: 8),
-          if (selectedCategory != "ALL")
-            Text(
-              selectedCategory,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          const SizedBox(height: 8), // Add some spacing
-          if (highestSpendingCategory != null &&
-              selectedCategory ==
-                  "ALL") // Show only if there are highest spending categories
-            Text(
-              'Categories where you spent the most: $highestSpendingCategory',
-              // Display the categories
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: TotalExpenseCard(
+        totalAmount: totalAmount,
+        title: selectedMonth != null
+            ? 'Total Expenses $selectedMonth ${DateFormat('yyyy').format(selectedDate)}'
+            : 'Total Expenses ${DateFormat('yyyy').format(selectedDate)}',
+        category: selectedCategory,
+        highestSpendingCategory: highestSpendingCategory,
       ),
     );
   }
