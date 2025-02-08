@@ -27,7 +27,8 @@ Built using the BLoC pattern for state management, the app offers a clean separa
 * **Home Screen**: A list of expenses is displayed, grouped by day for better organization. Users can delete individual expense entries by swiping left on an expense item in the list or by clicking the delete button on each expense card. This action will remove the expense from the list and update the total expense calculation accordingly.
 
 * **Statistics Screen** show:
-    * Total expenses for the selected month or year. Users can switch between views by clicking on the arrow (for year) or on the chart (for month).
+    * Total expenses for the selected month or year. Users can filter the expences by clicking on the arrow (for year) or on the chart (for month).
+    * The scrollable chart that show the expenses of the selected year divided per month.
     * The category/ies with the highest spending for the selected month or year.
     * **Category Filtering**: Users can filter expenses by category (e.g., Food, Travel, Shopping) and view the corresponding expenses.
 
