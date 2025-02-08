@@ -9,6 +9,7 @@ import '../blocs/expense_form/expense_form_state.dart';
 import '../constants.dart';
 import '../models/expense_category.dart';
 import '../widgets/category_item.dart';
+import '../widgets/input_field.dart';
 
 class NewExpenseScreen extends StatelessWidget {
   final ExpenseCategory category;
@@ -75,15 +76,13 @@ class NewExpenseScreen extends StatelessWidget {
   }
 
   Widget _buildAmountInput(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: kBoxDecoration,
+    return InputField(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text("€", style: TextStyle(fontSize: 26, color: kButtonColor)),
           const SizedBox(width: 8),
           Expanded(
+            // Important: Use Expanded here as well
             child: TextField(
               textAlign: TextAlign.center,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -105,9 +104,7 @@ class NewExpenseScreen extends StatelessWidget {
   }
 
   Widget _buildDescriptionInput(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: kBoxDecoration,
+    return InputField(
       child: TextField(
         onChanged: (value) =>
             context.read<ExpenseFormBloc>().add(DescriptionChanged(value)),
@@ -122,8 +119,9 @@ class NewExpenseScreen extends StatelessWidget {
   Widget _buildDatePicker(BuildContext context) {
     return BlocBuilder<ExpenseFormBloc, ExpenseFormState>(
       builder: (context, state) {
-        return InkWell(
+        return InputField(
           onTap: () async {
+            // Pass the onTap callback
             final pickedDate = await showDatePicker(
               context: context,
               initialDate: state.date,
@@ -135,19 +133,15 @@ class NewExpenseScreen extends StatelessWidget {
               context.read<ExpenseFormBloc>().add(DateChanged(pickedDate));
             }
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            decoration: kBoxDecoration,
-            child: Row(
-              children: [
-                const Icon(Icons.calendar_today, color: Colors.grey),
-                const SizedBox(width: 10),
-                Text(
-                  DateFormat('dd/MM/yyyy').format(state.date),
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
+          child: Row(
+            children: [
+              const Icon(Icons.calendar_today, color: Colors.grey),
+              const SizedBox(width: 10),
+              Text(
+                DateFormat('dd/MM/yyyy').format(state.date),
+                style: const TextStyle(fontSize: 18),
+              ),
+            ],
           ),
         );
       },
