@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_expense_tracker/constants.dart';
 import 'package:personal_expense_tracker/screens/expenses_list_screen.dart';
 import 'package:personal_expense_tracker/screens/statistic_screen.dart';
-import 'package:personal_expense_tracker/widgets/chose_category_dialog.dart';
+import 'package:personal_expense_tracker/widgets/select_category_dialog.dart';
 import '../blocs/navigation/navigation_bloc.dart';
 import '../blocs/navigation/navigation_event.dart';
 import '../blocs/navigation/navigation_state.dart';
@@ -58,7 +58,7 @@ class HomeScreen extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ChoseCategoryDialog();
+        return SelectCategoryDialog();
       },
     );
   }

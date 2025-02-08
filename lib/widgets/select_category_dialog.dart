@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/models/expense_categories.dart';
 import '../widgets/category_item.dart';
 
-class ChoseCategoryDialog extends StatelessWidget {
-  const ChoseCategoryDialog({
+class SelectCategoryDialog extends StatelessWidget {
+  const SelectCategoryDialog({
     super.key,
   });
 
