@@ -6,9 +6,7 @@ import 'expenses_stat_event.dart';
 import 'expenses_stat_state.dart';
 
 class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
-  ExpensesStatBloc()
-      : super(ExpensesStatState(
-            selectedDate: DateTime.now())) {
+  ExpensesStatBloc() : super(ExpensesStatState(selectedDate: DateTime.now())) {
     on<ChangeCategoryEvent>(_onChangeCategory);
     on<ChangeYearEvent>(_onChangeYear);
     on<ChangeMonthSelectionEvent>(_onChangeMonthSelection);
@@ -33,7 +31,7 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
 
   List<Expense> getFilteredExpenses(
       List<Expense> expenses, ExpensesStatState state) {
-    return expenses.where((expense) {
+    final filteredExpenses = expenses.where((expense) {
       final isSameYear = expense.date.year == state.selectedDate.year;
       final isSameMonth = state.selectedMonth == null ||
           DateFormat('MMM').format(expense.date) == state.selectedMonth;
@@ -41,6 +39,11 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
           expense.category == state.selectedCategory;
       return isSameYear && isSameMonth && isSameCategory;
     }).toList();
+
+    final sortedExpenses = List<Expense>.from(filteredExpenses);
+    sortedExpenses.sort((a, b) => b.date.compareTo(a.date));
+
+    return sortedExpenses;
   }
 
   double calculateTotalAmount(List<Expense> expenses) {
