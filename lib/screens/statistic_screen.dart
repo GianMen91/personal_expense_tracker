@@ -9,6 +9,7 @@ import '../blocs/expenses_stat/expenses_stat_bloc.dart';
 import '../blocs/expenses_stat/expenses_stat_event.dart';
 import '../blocs/expenses_stat/expenses_stat_state.dart';
 import '../constants.dart';
+import '../widgets/category_selector.dart';
 import '../widgets/expense_card_list.dart';
 import '../widgets/monthly_chart.dart';
 import '../widgets/year_selector.dart';
@@ -59,7 +60,7 @@ class StatisticScreen extends StatelessWidget {
                   MonthlyChart(
                       monthlyData: monthlyData,
                       selectedMonth: statState.selectedMonth),
-                  _buildCategorySelector(context, statState.selectedCategory),
+                  CategorySelector(selectedCategory: statState.selectedCategory),
                   ExpenseCardsList(expenses: filteredExpenses),
                 ],
               ),
@@ -117,50 +118,6 @@ class StatisticScreen extends StatelessWidget {
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCategorySelector(BuildContext context, String selectedCategory) {
-    final categories = [
-      "ALL",
-      ...ExpenseCategories.categories.map((c) => c.title)
-    ];
-
-    return Container(
-      height: 50,
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          return GestureDetector(
-            onTap: () {
-              context
-                  .read<ExpensesStatBloc>()
-                  .add(ChangeCategoryEvent(category));
-            },
-            child: _buildCategoryPill(category, category == selectedCategory),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildCategoryPill(String title, bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-          color: isSelected ? kThemeColor : Colors.white,
-          borderRadius: BorderRadius.circular(10)),
-      child: Center(
-        child: Text(title,
-            style: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey[600],
-                fontWeight: FontWeight.bold)),
       ),
     );
   }
