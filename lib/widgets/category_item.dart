@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
 import '../models/expense_category.dart';
 import '../screens/new_expense_screen.dart';
 import 'category_avatar.dart';
@@ -12,12 +13,8 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        decoration:BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      decoration: kBoxDecoration,
       child: ListTile(
         leading: CategoryAvatar(category: category),
         title: Text(category.title),
@@ -34,4 +31,3 @@ class CategoryItem extends StatelessWidget {
     );
   }
 }
-

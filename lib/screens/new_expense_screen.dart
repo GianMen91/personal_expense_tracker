@@ -77,7 +77,7 @@ class NewExpenseScreen extends StatelessWidget {
   Widget _buildAmountInput(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: _boxDecoration(),
+      decoration: kBoxDecoration,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -107,7 +107,7 @@ class NewExpenseScreen extends StatelessWidget {
   Widget _buildDescriptionInput(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: _boxDecoration(),
+      decoration: kBoxDecoration,
       child: TextField(
         onChanged: (value) =>
             context.read<ExpenseFormBloc>().add(DescriptionChanged(value)),
@@ -137,7 +137,7 @@ class NewExpenseScreen extends StatelessWidget {
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            decoration: _boxDecoration(),
+            decoration: kBoxDecoration,
             child: Row(
               children: [
                 const Icon(Icons.calendar_today, color: Colors.grey),
@@ -151,15 +151,6 @@ class NewExpenseScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-
-
-  BoxDecoration _boxDecoration() {
-    return BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
     );
   }
 }
