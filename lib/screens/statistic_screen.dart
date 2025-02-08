@@ -226,8 +226,6 @@ class StatisticScreen extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildCategoryPill(String title, bool isSelected) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
