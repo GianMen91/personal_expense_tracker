@@ -60,7 +60,10 @@ class StatisticScreen extends StatelessWidget {
                       selectedMonth: statState.selectedMonth),
                   CategorySelector(
                       selectedCategory: statState.selectedCategory),
-                  ExpenseCardsList(expenses: filteredExpenses),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ExpenseCardsList(expenses: filteredExpenses),
+                  ),
                 ],
               ),
             ),

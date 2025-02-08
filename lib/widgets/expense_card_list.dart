@@ -18,8 +18,6 @@ class ExpenseCardsList extends StatelessWidget {
       shrinkWrap: true,
       // Only if inside another scrolling widget
       physics: const NeverScrollableScrollPhysics(),
-      // Only if inside another scrolling widget
-      padding: const EdgeInsets.symmetric(horizontal: 16),
       // Customizable
       itemCount: expenses.length,
       itemBuilder: (context, index) {
