@@ -156,7 +156,7 @@ class NewExpenseScreen extends StatelessWidget {
 
   Widget _buildCategoryCard() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       decoration: _boxDecoration(),
       child: CategoryItem(category: category),
     );
