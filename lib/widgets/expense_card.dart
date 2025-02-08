@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/constants.dart';
+import '../constants.dart';
 import '../models/expense.dart';
 import '../models/expense_categories.dart';
+import 'category_avatar.dart';
 
 class ExpenseCard extends StatelessWidget {
   final Expense expense;
   final Function onDelete;
 
-  const ExpenseCard({super.key, required this.expense, required this.onDelete});
+  const ExpenseCard({
+    super.key,
+    required this.expense,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,46 +20,10 @@ class ExpenseCard extends StatelessWidget {
 
     return Dismissible(
       key: Key(expense.id.toString()),
-      direction: DismissDirection.endToStart,
-      // Swipe from right to left
-      onDismissed: (direction) {
-        onDelete(expense); // Call onDelete function when dismissed
-      },
-      confirmDismiss: (direction) async {
-        return await showDialog<bool>(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Are you sure?'),
-                  content: const Text('Do you want to delete this expense?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text('Delete'),
-                    ),
-                  ],
-                );
-              },
-            ) ??
-            false; // If the user cancels, return false
-      },
-      background: Container(
-        color: Colors.red,
-        child: const Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
+      direction: DismissDirection.endToStart, // Swipe from right to left
+      onDismissed: (direction) => onDelete(), // Call onDelete function when dismissed
+      confirmDismiss: (direction) async => await _showDeleteDialog(context),
+      background: _buildDismissBackground(),
       child: Card(
         elevation: 0,
         color: Colors.white,
@@ -66,22 +35,12 @@ class ExpenseCard extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: category.color.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  category.icon,
-                  color: category.color,
-                  size: 24,
-                ),
-              ),
+              CategoryAvatar(category: category),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       expense.description,
@@ -92,7 +51,7 @@ class ExpenseCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      category.title,
+                      category.title, // Handle null category gracefully
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -115,4 +74,44 @@ class ExpenseCard extends StatelessWidget {
       ),
     );
   }
+
+  Future<bool> _showDeleteDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: const Text('Do you want to delete this expense?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    ) ??
+        false; // If the user cancels, return false
+  }
+
+
+  Widget _buildDismissBackground() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.only(right: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.circular(12), // Match the card's border radius
+      ),
+      child: const Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
+  }
 }
+

@@ -8,6 +8,7 @@ import '../blocs/expense_form/expense_form_event.dart';
 import '../blocs/expense_form/expense_form_state.dart';
 import '../constants.dart';
 import '../models/expense_category.dart';
+import '../widgets/category_item.dart';
 
 class NewExpenseScreen extends StatelessWidget {
   final ExpenseCategory category;
@@ -157,16 +158,7 @@ class NewExpenseScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: _boxDecoration(),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: category.color,
-            child: Icon(category.icon, color: Colors.white),
-          ),
-          const SizedBox(width: 10),
-          Text(category.title, style: const TextStyle(fontSize: 18)),
-        ],
-      ),
+      child: CategoryItem(category: category),
     );
   }
 

@@ -10,7 +10,7 @@ class ChoseCategoryDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Category'),
+      title: const Text('Select a category'),
       content: SizedBox(
         height: 300.0,
         width: 300.0,
