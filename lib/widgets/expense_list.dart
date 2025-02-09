@@ -20,13 +20,13 @@ class ExpenseList extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(date,
+              child: Text(date, key: const Key('expenseDate'),
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey[600])),
             ),
-            ExpenseCardsList(expenses: expenses), // Use the common function
+            ExpenseCardsList(expenses: expenses, key: const Key('expenseCardList'),), // Use the common function
           ],
         );
       },

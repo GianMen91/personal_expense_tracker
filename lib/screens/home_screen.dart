@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text(
+              key: Key('appTitle'),
               'Personal Expense Tracker',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(
+            key: const Key('addExpenseButton'),
             backgroundColor: kButtonColor,
             shape: const CircleBorder(),
             onPressed: () async {
@@ -37,7 +39,7 @@ class HomeScreen extends StatelessWidget {
             child: const Icon(Icons.add, color: Colors.white, size: 28),
           ),
           bottomNavigationBar:
-              BottomMenu(myPage: _myPage, currentIndex: state.currentIndex),
+              BottomMenu(myPage: _myPage, currentIndex: state.currentIndex,key: const Key('bottomMenu'),),
           body: PageView(
             controller: _myPage,
             onPageChanged: (int index) {
@@ -45,8 +47,8 @@ class HomeScreen extends StatelessWidget {
             },
             physics: const NeverScrollableScrollPhysics(),
             children: <Widget>[
-              ExpensesListScreen(),
-              StatisticScreen(),
+              ExpensesListScreen(key: const Key('expensesListScreen')),
+              StatisticScreen(key: const Key('statisticScreen')),
             ],
           ),
         );
@@ -58,7 +60,7 @@ class HomeScreen extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SelectCategoryDialog();
+        return SelectCategoryDialog(key: const Key('selectCategoryDialog'));
       },
     );
   }

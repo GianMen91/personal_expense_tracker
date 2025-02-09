@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_expense_tracker/models/expense.dart';
 import '../blocs/expense_list/expense_list_bloc.dart';
 import '../blocs/expense_list/expense_list_state.dart';
 import '../blocs/expenses_stat/expenses_stat_bloc.dart';
@@ -47,22 +46,29 @@ class StatisticScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTotalExpenseCard(
-                      totalAmount,
-                      statState.selectedDate,
-                      statState.selectedCategory,
-                      statState.selectedMonth,
-                      listState.expenses,
-                      highestSpendingCategory),
-                  YearSelector(selectedDate: statState.selectedDate),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TotalExpenseCard(
+                      key: const Key('totalExpenseCard'),
+                      totalAmount: totalAmount,
+                      title: statState.selectedMonth != null
+                          ? 'Total Expenses $statState.selectedMonth ${DateFormat('yyyy').format(statState.selectedDate)}'
+                          : 'Total Expenses ${DateFormat('yyyy').format(statState.selectedDate)}',
+                      category: statState.selectedCategory,
+                      highestSpendingCategory: highestSpendingCategory,
+                    ),
+                  ),
+                  YearSelector(selectedDate: statState.selectedDate, key: const Key('yearSelector')),
                   MonthlyChart(
+                      key: const Key('monthlyChart'),
                       monthlyData: monthlyData,
                       selectedMonth: statState.selectedMonth),
                   CategorySelector(
+                      key: const Key('categorySelector'),
                       selectedCategory: statState.selectedCategory),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ExpenseCardsList(expenses: filteredExpenses),
+                    child: ExpenseCardsList(expenses: filteredExpenses, key: const Key('expenseCardsList')),
                   ),
                 ],
               ),
@@ -71,25 +77,5 @@ class StatisticScreen extends StatelessWidget {
         },
       );
     });
-  }
-
-  Widget _buildTotalExpenseCard(
-      double totalAmount,
-      DateTime selectedDate,
-      String selectedCategory,
-      String? selectedMonth,
-      List<Expense> expenses,
-      String? highestSpendingCategory) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: TotalExpenseCard(
-        totalAmount: totalAmount,
-        title: selectedMonth != null
-            ? 'Total Expenses $selectedMonth ${DateFormat('yyyy').format(selectedDate)}'
-            : 'Total Expenses ${DateFormat('yyyy').format(selectedDate)}',
-        category: selectedCategory,
-        highestSpendingCategory: highestSpendingCategory,
-      ),
-    );
   }
 }

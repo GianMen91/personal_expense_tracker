@@ -16,8 +16,8 @@ class CategoryItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 15),
       decoration: kBoxDecoration,
       child: ListTile(
-        leading: CategoryAvatar(category: category),
-        title: Text(category.title),
+        leading: CategoryAvatar(category: category, key: const Key('categoryAvatar'),),
+        title: Text(category.title, key: const Key('categoryTitle')),
         onTap: () {
           Navigator.of(context).pop();
           Navigator.push(

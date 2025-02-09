@@ -16,6 +16,7 @@ class CategoryAvatar extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Icon(
+        key: const Key('categoryIcon'),
         category.icon,
         color: category.color,
         size: 24,

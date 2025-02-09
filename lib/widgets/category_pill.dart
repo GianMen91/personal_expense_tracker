@@ -18,7 +18,7 @@ class CategoryPill extends StatelessWidget {
           color: isSelected ? kThemeColor : Colors.white,
           borderRadius: BorderRadius.circular(10)),
       child: Center(
-        child: Text(title,
+        child: Text(title,key: const Key('categoryPillTitle'),
             style: TextStyle(
                 color: isSelected ? Colors.white : Colors.grey[600],
                 fontWeight: FontWeight.bold)),

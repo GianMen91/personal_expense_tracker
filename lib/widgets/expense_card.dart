@@ -35,7 +35,7 @@ class ExpenseCard extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              CategoryAvatar(category: category),
+              CategoryAvatar(category: category, key: const Key('categoryAvatar'),),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -43,6 +43,7 @@ class ExpenseCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
+                      key: const Key('expenseDescription'),
                       expense.description,
                       style: const TextStyle(
                         fontSize: 16,
@@ -51,7 +52,8 @@ class ExpenseCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      category.title, // Handle null category gracefully
+                      key: const Key('expenseTitle'),
+                      category.title,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -61,6 +63,7 @@ class ExpenseCard extends StatelessWidget {
                 ),
               ),
               Text(
+                key: const Key('expenseCost'),
                 '${expense.cost.toStringAsFixed(2)} €',
                 style: const TextStyle(
                   fontSize: 16,

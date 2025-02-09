@@ -24,6 +24,7 @@ class BottomMenu extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.home,
+                  key: const Key('homeIcon'),
                   color: currentIndex == 0 ? kThemeColor : Colors.grey),
               onPressed: () {
                 context.read<NavigationBloc>().add(ChangePage(0));
@@ -31,6 +32,7 @@ class BottomMenu extends StatelessWidget {
               },
             ),
             IconButton(
+              key: const Key('barChartIcon'),
               icon: Icon(Icons.bar_chart,
                   color: currentIndex == 1 ? kThemeColor : Colors.grey),
               onPressed: () {

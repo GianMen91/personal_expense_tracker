@@ -25,11 +25,12 @@ class ExpensesListScreen extends StatelessWidget {
               child: Column(
                 children: [
                   TotalExpenseCard(
+                    key: const Key('totalExpenseCard'),
                     totalAmount: state.monthlyTotal,
                     title: 'Total expense this month',
                   ),
                   Expanded(
-                    child: ExpenseList(groupedExpenses: state.groupedExpenses),
+                    child: ExpenseList(groupedExpenses: state.groupedExpenses,key: const Key('expenseList')),
                   ),
                 ],
               ),
