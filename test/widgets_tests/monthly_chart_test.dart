@@ -39,10 +39,8 @@ void main() {
       );
 
       expect(find.byKey(const Key('chart_container')), findsOneWidget);
-      expect(find.byKey(const Key('monthly_data')),
-          findsWidgets); // Check if data bars are rendered
-      expect(find.byKey(const Key('month_name_text')),
-          findsWidgets); // Check if month name texts are rendered
+      expect(find.byKey(const Key('monthly_data')), findsWidgets);
+      expect(find.byKey(const Key('month_name_text')), findsWidgets);
     });
   });
 }

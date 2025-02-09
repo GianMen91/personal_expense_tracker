@@ -9,7 +9,6 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            // Use Builder to get a BuildContext
             builder: (BuildContext context) {
               return ElevatedButton(
                 onPressed: () {
@@ -26,11 +25,9 @@ void main() {
         ),
       );
 
-      // Tap the button to show the dialog
       await tester.tap(find.text('Show Dialog'));
       await tester.pumpAndSettle();
 
-      // Verify dialog is open
       expect(
           find.byKey(const Key('select_category_title_text')), findsOneWidget);
 
@@ -74,7 +71,7 @@ void main() {
 
       // Tap the cancel button
       await tester.tap(find.byKey(const Key('cancel_button')));
-      await tester.pumpAndSettle(); // Important: Wait for dialog to disappear
+      await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('select_category_title_text')), findsNothing);
     });
