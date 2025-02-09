@@ -40,6 +40,8 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   path: any
+  mocktail: ^1.0.4
+  bloc_test: ^9.1.7
 dev_dependencies:
   integration_test:
     sdk: flutter
