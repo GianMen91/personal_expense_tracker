@@ -76,7 +76,6 @@ void main() {
       await tester.tap(find.byKey(const Key('cancel_button')));
       await tester.pumpAndSettle(); // Important: Wait for dialog to disappear
 
-      // Verify dialog is closed (you might need to check if the dialog is no longer present in the widget tree).
       expect(find.byKey(const Key('select_category_title_text')), findsNothing);
     });
   });

@@ -9,7 +9,6 @@ void main() {
     // Create a mock ExpenseCategory
     var testCategory = ExpenseCategories.categories[0];
 
-    // Build the widget inside a testable environment
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(

@@ -4,9 +4,9 @@ import 'package:personal_expense_tracker/models/expense.dart';
 import 'package:personal_expense_tracker/widgets/expense_card_list.dart';
 import 'package:personal_expense_tracker/widgets/expense_list.dart';
 
-
 void main() {
-  testWidgets('ExpenseList displays grouped expenses correctly', (WidgetTester tester) async {
+  testWidgets('ExpenseList displays grouped expenses correctly',
+      (WidgetTester tester) async {
     // Sample grouped expenses data
     final groupedExpenses = {
       '2025-02-01': [
@@ -47,7 +47,8 @@ void main() {
     expect(find.text('Lunch at Cafe'), findsOneWidget);
 
     // Check if the ExpenseCardsList is present in the widget tree
-    expect(find.byType(ExpenseCardsList), findsNWidgets(groupedExpenses.length));
+    expect(
+        find.byType(ExpenseCardsList), findsNWidgets(groupedExpenses.length));
 
     // Verify that the expense cards are shown for each date group
     for (var date in groupedExpenses.keys) {

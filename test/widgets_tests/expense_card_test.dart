@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_expense_tracker/models/expense.dart';
 import 'package:personal_expense_tracker/widgets/expense_card.dart';
 
-
 void main() {
   testWidgets('ExpenseCard displays content', (WidgetTester tester) async {
     final expense = Expense(
@@ -15,8 +14,7 @@ void main() {
     );
 
     // Create a mock function for the onDelete callback
-    void onDelete() {
-    }
+    void onDelete() {}
 
     // Build the widget tree with ExpenseCard
     await tester.pumpWidget(
@@ -38,7 +36,6 @@ void main() {
 
     // Check that the cost is displayed
     expect(find.text('25.00 €'), findsOneWidget);
-
 
     // Swipe the card from right to left to trigger dismiss
     final dismissibleFinder = find.byType(Dismissible);

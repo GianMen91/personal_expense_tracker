@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_expense_tracker/widgets/total_expense_card.dart';
 
 void main() {
-  testWidgets('TotalExpenseCard displays correctly: Card with all fields populated', (WidgetTester tester) async {
-    // Test 1: Card with all fields populated
+  testWidgets(
+      'TotalExpenseCard displays correctly: Card with all fields populated',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -24,17 +25,18 @@ void main() {
     // Verify title text
     expect(find.byKey(Key('title_text')), findsOneWidget);
 
-    // Verify subtitle text
+    // Verify subtitle text is not displayed
     expect(find.byKey(Key('subtitle_text')), findsNothing);
 
-    // Verify category text
+    // Verify category text is not displayed
     expect(find.byKey(Key('category_text')), findsNothing);
 
     // Verify highest spending category text
     expect(find.byKey(Key('highest_spending_category_text')), findsOneWidget);
   });
 
-  testWidgets('TotalExpenseCard displays correctly: Card without subtitle', (WidgetTester tester) async {
+  testWidgets('TotalExpenseCard displays correctly: Card without subtitle',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -54,10 +56,9 @@ void main() {
     expect(find.byKey(Key('category_text')), findsOneWidget);
   });
 
-
-  testWidgets('TotalExpenseCard displays correctly: Card with category "ALL" and highestSpendingCategory', (WidgetTester tester) async {
-
-    // Test 3:
+  testWidgets(
+      'TotalExpenseCard displays correctly: Card with category "ALL" and highestSpendingCategory',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(

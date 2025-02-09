@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_expense_tracker/models/expense_categories.dart';
 import 'package:personal_expense_tracker/widgets/category_item.dart';
 
-
 void main() {
   testWidgets('CategoryItem renders correctly', (WidgetTester tester) async {
     // Create a test ExpenseCategory
@@ -25,6 +24,4 @@ void main() {
     expect(find.byKey(const Key('category_title_text')), findsOneWidget);
     expect(find.text('Groceries'), findsOneWidget);
   });
-
-
 }

@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_expense_tracker/widgets/input_field.dart';
 
 void main() {
-  testWidgets('InputField displays label and child widget correctly', (WidgetTester tester) async {
+  testWidgets('InputField displays label and child widget correctly',
+      (WidgetTester tester) async {
     // Mock data for testing
     final testLabel = 'Test Label';
     final testChild = Text('Test Child');
@@ -31,7 +32,8 @@ void main() {
     expect(find.byKey(const Key('input_field_row')), findsOneWidget);
   });
 
-  testWidgets('InputField triggers onTap callback when tapped', (WidgetTester tester) async {
+  testWidgets('InputField triggers onTap callback when tapped',
+      (WidgetTester tester) async {
     // Mock onTap callback
     bool tapped = false;
     onTapCallback() {
@@ -62,7 +64,8 @@ void main() {
     expect(tapped, true);
   });
 
-  testWidgets('InputField renders correctly without label', (WidgetTester tester) async {
+  testWidgets('InputField renders correctly without label',
+      (WidgetTester tester) async {
     // Build the InputField widget without a label
     await tester.pumpWidget(
       MaterialApp(
