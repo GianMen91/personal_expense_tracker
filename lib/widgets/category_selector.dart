@@ -19,6 +19,7 @@ class CategorySelector extends StatelessWidget {
     ];
 
     return Container(
+      key: const Key('category_pill_list'),
       height: 50,
       margin: const EdgeInsets.symmetric(vertical: 16),
       child: ListView.builder(
