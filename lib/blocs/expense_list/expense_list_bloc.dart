@@ -94,12 +94,17 @@ class ExpensesListBloc extends Bloc<ExpensesListEvent, ExpensesListState> {
   // Groups expenses by date, with the format 'Today', 'dd MMM yyyy', etc.
   Map<String, List<Expense>> _groupExpensesByDate(List<Expense> expenses) {
     final groupedExpenses = <String, List<Expense>>{};
+
     for (var expense in expenses) {
       final dateStr = _formatDate(expense.date); // Format the date as a string
-      groupedExpenses
-          .putIfAbsent(dateStr, () => [])
-          .add(expense); // Group by formatted date
+      groupedExpenses.putIfAbsent(dateStr, () => []).add(expense);
     }
+
+    // Sort each group (same-day expenses) from most recent to oldest
+    groupedExpenses.forEach((key, list) {
+      list.sort((a, b) => b.date.compareTo(a.date)); // Sort expenses within the same day
+    });
+
     // Sort grouped expenses by date, from most recent to oldest.
     return Map.fromEntries(groupedExpenses.entries.toList()
       ..sort((a, b) => _parseDate(b.key).compareTo(_parseDate(a.key))));
