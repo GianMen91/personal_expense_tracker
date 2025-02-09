@@ -6,7 +6,7 @@ import 'category_avatar.dart';
 
 class ExpenseCard extends StatelessWidget {
   final Expense expense;
-  final Function onDelete;
+  final void Function(Expense) onDelete;
 
   const ExpenseCard({
     super.key,
@@ -20,8 +20,8 @@ class ExpenseCard extends StatelessWidget {
 
     return Dismissible(
       key: Key(expense.id.toString()),
-      direction: DismissDirection.endToStart, // Swipe from right to left
-      onDismissed: (direction) => onDelete(), // Call onDelete function when dismissed
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) => onDelete(expense),
       confirmDismiss: (direction) async => await _showDeleteDialog(context),
       background: _buildDismissBackground(),
       child: Card(
