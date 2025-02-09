@@ -54,15 +54,17 @@ It ensures that the logic and state of the application are managed efficiently a
 This layer is implemented using the BLoC (Business Logic Component) pattern, which uses streams and events to manage state.
 
 **Components:**
-* `expenses_bloc.dart`: This file contains the BLoC for managing expenses. It listens to user events (like adding a new expense, delete an expense, or selecting a month), processes them, and updates the app’s state. It emits new states based on the logic executed.
 * `navigation_bloc.dart`: This BLoC manages the navigation state of the app. It controls which screen is active and can be used to switch between different views (e.g., between the Home Screen and the Statistics Screen).
+* `expenses_list_bloc.dart`: This BLoC is responsible for managing the list of expenses. It handles loading, adding, and deleting expenses from the database. The BLoC listens for events like LoadExpense, AddExpense, and DeleteExpense, and updates the state with the current list of expenses. It also performs data transformations, such as grouping expenses by date and calculating the total monthly expenditure.
+* `expenses_stat_bloc.dart`: This BLoC is in charge of handling statistics related to expenses. It manages filtering expenses by category, year, and month. The BLoC listens for events like ChangeCategoryEvent, ChangeYearEvent, and ChangeMonthSelectionEvent to update the selected category, year, and month, and calculates filtered totals. Additionally, it provides insights like the highest spending category and monthly data for the selected year.
+* `expense_form_bloc.dart`: This BLoC handles the state and validation of the expense form. It listens for changes in description, cost, and date fields. When the form is submitted, it validates the inputs and creates a new expense object, which is then added to the list of expenses. The BLoC also handles form resets and emits the corresponding state changes based on the user input.
 * **State Management**: The app’s state is represented as states (e.g., expense list, navigation state, etc.) and events (e.g., add expense, update expense). The BLoC listens for these events and processes them, emitting new states as necessary.
 
 ### 2. Data Layer (Models and Repositories)
 The **data layer** manages all of the app’s data, including models and repositories. It contains the definitions of the data structures used throughout the app and also handles the interaction with the data source (e.g., local storage or database).
 
 **Components:**
-* **Models** (`expense.dart`, `expense_categories.dart`): These files define the data structures used in the app, such as `Expense`, `ExpenseCategory`, and `ExpenseCategories`. They hold the attributes (like amount, category, and date) and may contain some logic for manipulating the data.
+* **Models** (`expense.dart`, `expense_categories.dart`, `expense_category.dart`, `expense_data.dart`,`expense_validation_service.dart`): These files define the data structures used in the app, such as `Expense`, `ExpenseCategory`, and `ExpenseCategories`. They hold the attributes (like amount, category, and date) and may contain some logic for manipulating the data.
 * **Repositories** (`database_helper.dart`): This component interacts with the local storage/database to persist and retrieve data.
 
 ### 3. Presentation Layer (Screens and Widgets)
@@ -94,7 +96,7 @@ The interaction between these layers occurs as follows:
 * **SQLite**: Used for local storage to persist expenses across app restarts.
 * **Equatable**: Simplifies equality comparisons in Dart objects, making BLoC events and states more efficient.
 * **Linting**: The project adheres to best coding practices using custom lint rules to maintain a clean codebase.
-* **Widget Testing**: Comprehensive widget tests ensure the stability and reliability of UI components.
+* **Testing**: Comprehensive widget, unit and integration tests ensure the stability and reliability of the app.
 
 ## Instructions to Run the App
 
