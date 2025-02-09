@@ -14,7 +14,10 @@ void main() {
     );
 
     // Create a mock function for the onDelete callback
-    void onDelete() {}
+    bool onDeleteCalled = false;
+    void onDelete(Expense expense) {
+      onDeleteCalled = true; // Set flag when onDelete is called
+    }
 
     // Build the widget tree with ExpenseCard
     await tester.pumpWidget(
