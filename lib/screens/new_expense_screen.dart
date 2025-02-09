@@ -19,19 +19,25 @@ class NewExpenseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ExpenseFormBloc, ExpenseFormState>(
-        builder: (context, state) {
+      builder: (context, state) {
       return Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         appBar: AppBar(
+          key: const Key('new_expense_app_bar'),
           backgroundColor: const Color(0xFFF5F5F5),
-          title: const Text('New Expense',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text(
+            'New Expense',
+            key: Key('new_expense_title_text'),
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           leading: IconButton(
+            key: const Key('back_button'),
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
         ),
         body: ListView(
+          key: const Key('new_expense_list_view'),
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           children: [
             _buildAmountInput(context),
@@ -52,6 +58,7 @@ class NewExpenseScreen extends StatelessWidget {
 
   Widget _buildSaveButton(ExpenseFormState state, BuildContext context) {
     return ElevatedButton(
+      key: const Key('save_button'),
       style: ElevatedButton.styleFrom(
         backgroundColor: state.isValid ? kButtonColor : Colors.grey,
         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -70,6 +77,7 @@ class NewExpenseScreen extends StatelessWidget {
           : null,
       child: const Text(
         "SAVE",
+        key: Key('save_button_text'),
         style: TextStyle(fontSize: 18, color: Colors.white),
       ),
     );
@@ -77,15 +85,21 @@ class NewExpenseScreen extends StatelessWidget {
 
   Widget _buildAmountInput(BuildContext context) {
     return InputField(
+      key: const Key('amount_input_field'),
       child: Row(
         children: [
-          const Text("€", style: TextStyle(fontSize: 26, color: kButtonColor)),
+          const Text(
+            "€",
+            key: Key('amount_currency_symbol'),
+            style: TextStyle(fontSize: 26, color: kButtonColor),
+          ),
           const SizedBox(width: 8),
           Expanded(
-            // Important: Use Expanded here as well
             child: TextField(
+              key: const Key('amount_text_field'),
               textAlign: TextAlign.center,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*[.,]?\d*'))
               ],
@@ -105,7 +119,9 @@ class NewExpenseScreen extends StatelessWidget {
 
   Widget _buildDescriptionInput(BuildContext context) {
     return InputField(
+      key: const Key('description_input_field'),
       child: TextField(
+        key: const Key('description_text_field'),
         onChanged: (value) =>
             context.read<ExpenseFormBloc>().add(DescriptionChanged(value)),
         decoration: const InputDecoration(
@@ -120,8 +136,8 @@ class NewExpenseScreen extends StatelessWidget {
     return BlocBuilder<ExpenseFormBloc, ExpenseFormState>(
       builder: (context, state) {
         return InputField(
+          key: const Key('date_picker_input_field'),
           onTap: () async {
-            // Pass the onTap callback
             final pickedDate = await showDatePicker(
               context: context,
               initialDate: state.date,
@@ -134,11 +150,17 @@ class NewExpenseScreen extends StatelessWidget {
             }
           },
           child: Row(
+            key: const Key('date_picker_row'),
             children: [
-              const Icon(Icons.calendar_today, color: Colors.grey),
+              const Icon(
+                Icons.calendar_today,
+                key: Key('date_picker_icon'),
+                color: Colors.grey,
+              ),
               const SizedBox(width: 10),
               Text(
                 DateFormat('dd/MM/yyyy').format(state.date),
+                key: const Key('selected_date_text'),
                 style: const TextStyle(fontSize: 18),
               ),
             ],

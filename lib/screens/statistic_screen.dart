@@ -49,7 +49,7 @@ class StatisticScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TotalExpenseCard(
-                      key: const Key('totalExpenseCard'),
+                      key: const Key('total_expense_card'),
                       totalAmount: totalAmount,
                       title: statState.selectedMonth != null
                           ? 'Total Expenses $statState.selectedMonth ${DateFormat('yyyy').format(statState.selectedDate)}'
@@ -58,17 +58,17 @@ class StatisticScreen extends StatelessWidget {
                       highestSpendingCategory: highestSpendingCategory,
                     ),
                   ),
-                  YearSelector(selectedDate: statState.selectedDate, key: const Key('yearSelector')),
+                  YearSelector(selectedDate: statState.selectedDate, key: const Key('year_selector')),
                   MonthlyChart(
-                      key: const Key('monthlyChart'),
+                      key: const Key('monthly_chart'),
                       monthlyData: monthlyData,
                       selectedMonth: statState.selectedMonth),
                   CategorySelector(
-                      key: const Key('categorySelector'),
+                      key: const Key('category_selector'),
                       selectedCategory: statState.selectedCategory),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ExpenseCardsList(expenses: filteredExpenses, key: const Key('expenseCardsList')),
+                    child: ExpenseCardsList(expenses: filteredExpenses, key: const Key('expense_cards_list')),
                   ),
                 ],
               ),

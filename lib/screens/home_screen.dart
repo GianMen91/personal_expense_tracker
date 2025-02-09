@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text(
-              key: Key('appTitle'),
+              key: Key('home_title_app_bar'),
               'Personal Expense Tracker',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(
-            key: const Key('addExpenseButton'),
+            key: const Key('add_expense_button'),
             backgroundColor: kButtonColor,
             shape: const CircleBorder(),
             onPressed: () async {
@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
             child: const Icon(Icons.add, color: Colors.white, size: 28),
           ),
           bottomNavigationBar:
-              BottomMenu(myPage: _myPage, currentIndex: state.currentIndex,key: const Key('bottomMenu'),),
+              BottomMenu(myPage: _myPage, currentIndex: state.currentIndex,key: const Key('bottom_menu'),),
           body: PageView(
             controller: _myPage,
             onPageChanged: (int index) {
@@ -47,8 +47,8 @@ class HomeScreen extends StatelessWidget {
             },
             physics: const NeverScrollableScrollPhysics(),
             children: <Widget>[
-              ExpensesListScreen(key: const Key('expensesListScreen')),
-              StatisticScreen(key: const Key('statisticScreen')),
+              ExpensesListScreen(key: const Key('expenses_list_screen')),
+              StatisticScreen(key: const Key('statistic_screen')),
             ],
           ),
         );
@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SelectCategoryDialog(key: const Key('selectCategoryDialog'));
+        return SelectCategoryDialog(key: const Key('select_category_dialog'));
       },
     );
   }
