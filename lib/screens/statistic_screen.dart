@@ -52,7 +52,7 @@ class StatisticScreen extends StatelessWidget {
                       key: const Key('total_expense_card'),
                       totalAmount: totalAmount,
                       title: statState.selectedMonth != null
-                          ? 'Total Expenses $statState.selectedMonth ${DateFormat('yyyy').format(statState.selectedDate)}'
+                          ? 'Total Expenses ${statState.selectedMonth} ${DateFormat('yyyy').format(statState.selectedDate)}'
                           : 'Total Expenses ${DateFormat('yyyy').format(statState.selectedDate)}',
                       category: statState.selectedCategory,
                       highestSpendingCategory: highestSpendingCategory,
