@@ -20,7 +20,7 @@ void main() {
         ),
         BlocProvider(
           create: (context) =>
-              ExpensesStatBloc(), // No expensesBloc dependency here
+              ExpensesStatBloc(),
         ),
         BlocProvider(
           create: (context) => NavigationBloc(),
