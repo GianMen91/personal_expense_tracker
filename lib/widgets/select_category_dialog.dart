@@ -13,11 +13,11 @@ class SelectCategoryDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: const Color(0xFFF5F5F5),
       title: const Text('Select a category',
-          key: Key('selectCategoryTitle'),
+          key: Key('select_category_title_text'),
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold)),
       content: SizedBox(
-        key: const Key('categoryList'),
+        key: const Key('category_list'),
         height: 300.0,
         width: 300.0,
         child: ListView.builder(
@@ -26,7 +26,7 @@ class SelectCategoryDialog extends StatelessWidget {
             final category = ExpenseCategories.categories[index];
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: CategoryItem(category: category,key: const Key('categoryItem'),),
+              child: CategoryItem(category: category,key: const Key('category_item'),),
             );
           },
         ),
@@ -35,7 +35,7 @@ class SelectCategoryDialog extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            key: const Key('cancelButton'),
+            key: const Key('cancel_button'),
             style: ElevatedButton.styleFrom(
               backgroundColor: kButtonColor,
               padding: const EdgeInsets.all(15),
@@ -43,7 +43,7 @@ class SelectCategoryDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-            child: const Text('CANCEL',key: Key('cancelButtonText'),
+            child: const Text('CANCEL',key: Key('cancel_button_text'),
                 style: TextStyle(fontSize: 18, color: Colors.white)),
             onPressed: () {
               Navigator.of(context).pop();

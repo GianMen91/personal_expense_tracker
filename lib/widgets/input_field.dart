@@ -15,20 +15,29 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      key: const Key('input_field_inkwell'),
       onTap: onTap,
       child: Container(
+        key: const Key('input_field_container'),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
+          key: const Key('input_field_row'),
           children: [
             if (label != null) ...[
-              Text(label!, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+              Text(
+                label!,
+                key: const Key('input_field_label'),
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
+              ),
               const SizedBox(width: 10),
             ],
-            Expanded(child: child),
+            Expanded(
+              child: child,
+            ),
           ],
         ),
       ),

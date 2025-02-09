@@ -20,7 +20,7 @@ class MonthlyChart extends StatelessWidget {
         0.0, (max, entry) => entry.value > max ? entry.value : max);
 
     return Container(
-      key: const Key('chartContainer'),
+      key: const Key('chart_container'),
       height: 200,
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -46,7 +46,7 @@ class MonthlyChart extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Center(
-                      key: const Key('monthlyData'),
+                      key: const Key('monthly_data'),
                       child: Container(
                         width: 30,
                         height: 120 * heightPercent.toDouble(),
@@ -60,7 +60,7 @@ class MonthlyChart extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(entry.key,
-                        key: const Key('monthText'),
+                        key: const Key('month_name_text'),
                         style:
                         TextStyle(color: Colors.grey[600], fontSize: 12)),
                   ],

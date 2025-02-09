@@ -23,7 +23,7 @@ class ExpenseCardsList extends StatelessWidget {
       itemBuilder: (context, index) {
         final expense = expenses[index];
         return ExpenseCard(
-          key: const Key('expenseCard'),
+          key: const Key('expense_card'),
           expense: expense,
           onDelete: (expense) {
             context.read<ExpensesListBloc>().add(DeleteExpense(expense));

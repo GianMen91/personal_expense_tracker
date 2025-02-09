@@ -41,7 +41,7 @@ class TotalExpenseCard extends StatelessWidget {
         children: [
           const SizedBox(height: 10),
           Text(
-            key: const Key('totalAmountText'),
+            key: const Key('total_amount_text'),
             '${totalAmount.toStringAsFixed(2)} €',
             style: const TextStyle(
               color: Colors.white,
@@ -50,22 +50,22 @@ class TotalExpenseCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Text(title,key: const Key('titleText'),
+          Text(title,key: const Key('title_text'),
               style: const TextStyle(color: Colors.white, fontSize: 18)),
           if (subtitle != null) ...[
             const SizedBox(height: 8),
-            Text(subtitle!,key: const Key('subTitleText'),
+            Text(subtitle!,key: const Key('subtitle_text'),
                 style: const TextStyle(color: Colors.white, fontSize: 16)),
           ],
           if (category != null && category != "ALL") ...[
             const SizedBox(height: 8),
-            Text(category!,key: const Key('categoryText'),
+            Text(category!,key: const Key('category_text'),
                 style: const TextStyle(color: Colors.white, fontSize: 16)),
             // Dynamic category
           ],
           if (highestSpendingCategory != null && category == "ALL") ...[
             const SizedBox(height: 8),
-            Text(key: const Key('highestSpendingCategoryText'),
+            Text(key: const Key('highest_spending_category_text'),
               'Categories where you spent the most: $highestSpendingCategory',
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
