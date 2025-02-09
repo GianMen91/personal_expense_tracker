@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
             child: const Icon(Icons.add, color: Colors.white, size: 28),
           ),
           bottomNavigationBar:
-              BottomMenu(myPage: _myPage, currentIndex: state.currentIndex,key: const Key('bottom_menu'),),
+              BottomMenu(myPage: _myPage, currentIndex: state.currentPage,key: const Key('bottom_menu'),),
           body: PageView(
             controller: _myPage,
             onPageChanged: (int index) {
