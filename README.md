@@ -78,8 +78,6 @@ The **presentation layer** is the part of the app that users interact with direc
 
   These screens listen to the state managed by the BLoC and rebuild when necessary.
 
-* Widgets (`expense_card.dart`): Custom Flutter widgets that are used across the app to display individual elements. For example, `expense_card.dart` is a widget that displays each expense item in a card format.
-
 ### Interaction Between Layers
 The interaction between these layers occurs as follows:
 
