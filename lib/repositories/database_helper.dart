@@ -14,8 +14,9 @@ class DatabaseHelper {
 
   // Lazy loading of the database: Returns the existing database if available, otherwise initializes it.
   Future<Database> get database async {
-    if (_database != null)
+    if (_database != null) {
       return _database!; // Return existing database if it exists
+    }
     _database = await _initDB(
         'personal_expense_tracker.db'); // Initialize the database if it doesn't exist
     return _database!;
