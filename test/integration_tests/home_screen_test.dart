@@ -18,11 +18,13 @@ import 'package:personal_expense_tracker/blocs/navigation/navigation_state.dart'
 import '../widgets_tests/bottom_menu_test.dart';
 
 // Mock implementation of ExpensesListBloc for testing
-class MockExpensesListBloc extends MockBloc<ExpensesListEvent, ExpensesListState>
+class MockExpensesListBloc
+    extends MockBloc<ExpensesListEvent, ExpensesListState>
     implements ExpensesListBloc {}
 
 // Mock implementation of ExpensesStatBloc for testing
-class MockExpensesStatBloc extends MockBloc<ExpensesStatEvent, ExpensesStatState>
+class MockExpensesStatBloc
+    extends MockBloc<ExpensesStatEvent, ExpensesStatState>
     implements ExpensesStatBloc {}
 
 // Mock implementation of ExpenseFormBloc for testing
@@ -72,13 +74,14 @@ void main() {
           BlocProvider<ExpensesStatBloc>.value(value: mockExpensesStatBloc),
           BlocProvider<ExpenseFormBloc>.value(value: mockExpenseFormBloc),
         ],
-        child:  MaterialApp(
+        child: MaterialApp(
           home: HomeScreen(),
         ),
       );
     }
 
-    testWidgets('should display initial expenses screen with all elements', (tester) async {
+    testWidgets('should display initial expenses screen with all elements',
+        (tester) async {
       // Act: Render the HomeScreen inside the test widget
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle(); // Wait for animations to settle

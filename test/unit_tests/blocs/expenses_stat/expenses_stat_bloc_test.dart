@@ -65,7 +65,8 @@ void main() {
       build: () => bloc,
       act: (bloc) => bloc.add(ChangeCategoryEvent('Food')),
       expect: () => [
-        predicate<ExpensesStatState>((state) => state.selectedCategory == 'Food'),
+        predicate<ExpensesStatState>(
+            (state) => state.selectedCategory == 'Food'),
       ],
     );
 
@@ -75,7 +76,8 @@ void main() {
       build: () => bloc,
       act: (bloc) => bloc.add(ChangeYearEvent(1)),
       expect: () => [
-        predicate<ExpensesStatState>((state) => state.selectedDate.year == DateTime.now().year + 1),
+        predicate<ExpensesStatState>(
+            (state) => state.selectedDate.year == DateTime.now().year + 1),
       ],
     );
 
@@ -94,7 +96,8 @@ void main() {
       test('filters by year correctly', () {
         final state = ExpensesStatState(selectedDate: DateTime(2024));
         final filtered = bloc.getFilteredExpenses(testExpenses, state);
-        expect(filtered.length, equals(3)); // Expenses from 2024 should be filtered
+        expect(filtered.length,
+            equals(3)); // Expenses from 2024 should be filtered
         expect(filtered.every((e) => e.date.year == 2024), isTrue);
       });
 
@@ -105,7 +108,8 @@ void main() {
           selectedCategory: 'Food',
         );
         final filtered = bloc.getFilteredExpenses(testExpenses, state);
-        expect(filtered.length, equals(2)); // Only 'Food' expenses should be returned
+        expect(filtered.length,
+            equals(2)); // Only 'Food' expenses should be returned
         expect(filtered.every((e) => e.category == 'Food'), isTrue);
       });
 
@@ -116,9 +120,12 @@ void main() {
           selectedMonth: 'Feb',
         );
         final filtered = bloc.getFilteredExpenses(testExpenses, state);
-        expect(filtered.length, equals(2)); // Expenses in 'Feb' should be returned
-        expect(filtered.every((e) =>
-        DateFormat('MMM').format(e.date) == 'Feb' && e.date.year == 2024),
+        expect(
+            filtered.length, equals(2)); // Expenses in 'Feb' should be returned
+        expect(
+            filtered.every((e) =>
+                DateFormat('MMM').format(e.date) == 'Feb' &&
+                e.date.year == 2024),
             isTrue);
       });
 
@@ -126,7 +133,8 @@ void main() {
       test('sorts expenses by date in descending order', () {
         final state = ExpensesStatState(selectedDate: DateTime(2024));
         final filtered = bloc.getFilteredExpenses(testExpenses, state);
-        expect(filtered.first.date.isAfter(filtered.last.date), isTrue); // Sorted by date
+        expect(filtered.first.date.isAfter(filtered.last.date),
+            isTrue); // Sorted by date
       });
     });
 
@@ -150,15 +158,28 @@ void main() {
       // Test for tie in the highest spending category
       test('returns multiple categories when there is a tie', () {
         final tieExpenses = [
-          Expense(id: 1, category: 'Food', description: 'Lunch', cost: 10.0, date: DateTime(2024, 2)),
-          Expense(id: 2, category: 'Transport', description: 'Bus', cost: 10.0, date: DateTime(2024, 2)),
+          Expense(
+              id: 1,
+              category: 'Food',
+              description: 'Lunch',
+              cost: 10.0,
+              date: DateTime(2024, 2)),
+          Expense(
+              id: 2,
+              category: 'Transport',
+              description: 'Bus',
+              cost: 10.0,
+              date: DateTime(2024, 2)),
         ];
         final result = bloc.getHighestSpendingCategory(
           tieExpenses,
           DateTime(2024, 2),
           'Feb',
         );
-        expect(result, equals('Food, Transport')); // Both 'Food' and 'Transport' should be the highest
+        expect(
+            result,
+            equals(
+                'Food, Transport')); // Both 'Food' and 'Transport' should be the highest
       });
 
       // Test when no expenses exist
@@ -182,15 +203,18 @@ void main() {
       // Test for calculating monthly totals correctly
       test('calculates monthly totals correctly', () {
         final monthlyData = bloc.getMonthlyData(testExpenses, DateTime(2024));
-        final febTotal = monthlyData.firstWhere((entry) => entry.key == 'Feb').value;
+        final febTotal =
+            monthlyData.firstWhere((entry) => entry.key == 'Feb').value;
         expect(febTotal, equals(30.0)); // Sum of 'Food' expenses in 'Feb'
       });
 
       // Test for handling months with no expenses
       test('returns zero for months with no expenses', () {
         final monthlyData = bloc.getMonthlyData(testExpenses, DateTime(2024));
-        final marTotal = monthlyData.firstWhere((entry) => entry.key == 'Mar').value;
-        expect(marTotal, equals(0.0)); // No expenses in March, should return zero
+        final marTotal =
+            monthlyData.firstWhere((entry) => entry.key == 'Mar').value;
+        expect(
+            marTotal, equals(0.0)); // No expenses in March, should return zero
       });
     });
   });

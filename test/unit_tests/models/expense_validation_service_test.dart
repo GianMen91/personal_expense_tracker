@@ -9,7 +9,9 @@ void main() {
   });
 
   group('ExpenseValidationService Tests', () {
-    test('should return true for a valid expense (non-empty description, positive cost)', () {
+    test(
+        'should return true for a valid expense (non-empty description, positive cost)',
+        () {
       // Arrange
       const description = 'Lunch';
       const cost = 10.0;

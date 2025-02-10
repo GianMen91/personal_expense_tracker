@@ -23,75 +23,75 @@ void main() {
     });
 
     testWidgets('displays loading indicator when state is loading',
-            (tester) async {
-          // Arrange: Set up mock bloc to emit a loading state
-          whenListen(
-            mockBloc,
-            Stream.value(ExpensesListState(isLoading: true, expenses: [])),
-            initialState: ExpensesListState(isLoading: true, expenses: []),
-          );
+        (tester) async {
+      // Arrange: Set up mock bloc to emit a loading state
+      whenListen(
+        mockBloc,
+        Stream.value(ExpensesListState(isLoading: true, expenses: [])),
+        initialState: ExpensesListState(isLoading: true, expenses: []),
+      );
 
-          // Act: Render the ExpensesListScreen wrapped in a BlocProvider
-          await tester.pumpWidget(
-            MaterialApp(
-              home: BlocProvider<ExpensesListBloc>.value(
-                value: mockBloc,
-                child: const ExpensesListScreen(),
-              ),
-            ),
-          );
+      // Act: Render the ExpensesListScreen wrapped in a BlocProvider
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<ExpensesListBloc>.value(
+            value: mockBloc,
+            child: const ExpensesListScreen(),
+          ),
+        ),
+      );
 
-          // Assert: Verify that the loading indicator is displayed
-          expect(find.byType(CircularProgressIndicator), findsOneWidget);
-        });
+      // Assert: Verify that the loading indicator is displayed
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
 
     testWidgets('displays total amount and expense list when data is loaded',
-            (tester) async {
-          // Arrange: Create test expense data
-          final testExpenses = [
-            Expense(
-              category: 'Groceries',
-              cost: 15.0,
-              description: 'Edeka',
-              date: DateTime.now(),
-            ),
-            Expense(
-              category: 'Lunches & Dinners',
-              cost: 20.0,
-              description: 'McDonald\'s',
-              date: DateTime.now(),
-            ),
-          ];
+        (tester) async {
+      // Arrange: Create test expense data
+      final testExpenses = [
+        Expense(
+          category: 'Groceries',
+          cost: 15.0,
+          description: 'Edeka',
+          date: DateTime.now(),
+        ),
+        Expense(
+          category: 'Lunches & Dinners',
+          cost: 20.0,
+          description: 'McDonald\'s',
+          date: DateTime.now(),
+        ),
+      ];
 
-          // Set up mock bloc to emit a state with loaded expenses
-          whenListen(
-            mockBloc,
-            Stream.value(ExpensesListState(
-              monthlyTotal: 35.0,
-              expenses: testExpenses,
-            )),
-            initialState: ExpensesListState(expenses: []),
-          );
+      // Set up mock bloc to emit a state with loaded expenses
+      whenListen(
+        mockBloc,
+        Stream.value(ExpensesListState(
+          monthlyTotal: 35.0,
+          expenses: testExpenses,
+        )),
+        initialState: ExpensesListState(expenses: []),
+      );
 
-          // Act: Render the ExpensesListScreen wrapped in a BlocProvider
-          await tester.pumpWidget(
-            MaterialApp(
-              home: BlocProvider<ExpensesListBloc>.value(
-                value: mockBloc,
-                child: const ExpensesListScreen(),
-              ),
-            ),
-          );
+      // Act: Render the ExpensesListScreen wrapped in a BlocProvider
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<ExpensesListBloc>.value(
+            value: mockBloc,
+            child: const ExpensesListScreen(),
+          ),
+        ),
+      );
 
-          // Wait for widget to rebuild
-          await tester.pumpAndSettle();
+      // Wait for widget to rebuild
+      await tester.pumpAndSettle();
 
-          // Assert: Verify total expense card is displayed with correct total amount
-          expect(find.byKey(const Key('total_expense_card')), findsOneWidget);
-          expect(find.text('35.00 €'), findsOneWidget);
+      // Assert: Verify total expense card is displayed with correct total amount
+      expect(find.byKey(const Key('total_expense_card')), findsOneWidget);
+      expect(find.text('35.00 €'), findsOneWidget);
 
-          // Verify that the expense list is displayed
-          expect(find.byKey(const Key('expense_list')), findsOneWidget);
-        });
+      // Verify that the expense list is displayed
+      expect(find.byKey(const Key('expense_list')), findsOneWidget);
+    });
   });
 }

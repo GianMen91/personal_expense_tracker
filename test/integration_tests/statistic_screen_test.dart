@@ -13,11 +13,13 @@ import 'package:personal_expense_tracker/models/expense.dart';
 import 'package:personal_expense_tracker/screens/statistic_screen.dart';
 
 // Mock implementation of ExpensesListBloc for testing
-class MockExpensesListBloc extends MockBloc<ExpensesListEvent, ExpensesListState>
+class MockExpensesListBloc
+    extends MockBloc<ExpensesListEvent, ExpensesListState>
     implements ExpensesListBloc {}
 
 // Mock implementation of ExpensesStatBloc for testing
-class MockExpensesStatBloc extends MockBloc<ExpensesStatEvent, ExpensesStatState>
+class MockExpensesStatBloc
+    extends MockBloc<ExpensesStatEvent, ExpensesStatState>
     implements ExpensesStatBloc {}
 
 void main() {
@@ -83,8 +85,8 @@ void main() {
         .thenReturn(testExpenses);
     when(() => mockExpensesStatBloc.calculateTotalAmount(any()))
         .thenReturn(80.0); // Sum of test expenses
-    when(() => mockExpensesStatBloc.getHighestSpendingCategory(any(), any(), any()))
-        .thenReturn('Food');
+    when(() => mockExpensesStatBloc.getHighestSpendingCategory(
+        any(), any(), any())).thenReturn('Food');
     when(() => mockExpensesStatBloc.getMonthlyData(any(), any()))
         .thenReturn([MapEntry('Jan', 80.0)]); // Monthly data for the chart
   });
@@ -100,7 +102,8 @@ void main() {
     );
   }
 
-  testWidgets('should display loading indicator when list is loading', (tester) async {
+  testWidgets('should display loading indicator when list is loading',
+      (tester) async {
     // Simulate loading state in ExpensesListBloc
     whenListen(
       mockExpensesListBloc,
@@ -113,12 +116,15 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('should display error message when list has error', (tester) async {
+  testWidgets('should display error message when list has error',
+      (tester) async {
     // Simulate error state in ExpensesListBloc
     whenListen(
       mockExpensesListBloc,
-      Stream.value(ExpensesListState(errorMessage: 'Loading failed', expenses: [])),
-      initialState: ExpensesListState(errorMessage: 'Loading failed', expenses: []),
+      Stream.value(
+          ExpensesListState(errorMessage: 'Loading failed', expenses: [])),
+      initialState:
+          ExpensesListState(errorMessage: 'Loading failed', expenses: []),
     );
 
     // Render the widget and check for error message
@@ -126,16 +132,22 @@ void main() {
     expect(find.text('Loading failed'), findsOneWidget);
   });
 
-  testWidgets('should display all statistics components when loaded', (tester) async {
+  testWidgets('should display all statistics components when loaded',
+      (tester) async {
     // Render the widget and wait for it to settle
     await tester.pumpWidget(createTestWidget());
     await tester.pumpAndSettle();
 
     // Verify that all the necessary statistics components are displayed
-    expect(find.byKey(const Key('total_expense_card')), findsOneWidget); // Total expense card
-    expect(find.byKey(const Key('year_selector')), findsOneWidget); // Year selector
-    expect(find.byKey(const Key('monthly_chart')), findsOneWidget); // Monthly chart
-    expect(find.byKey(const Key('category_selector')), findsOneWidget); // Category selector
-    expect(find.byKey(const Key('expense_cards_list')), findsOneWidget); // List of expense cards
+    expect(find.byKey(const Key('total_expense_card')),
+        findsOneWidget); // Total expense card
+    expect(find.byKey(const Key('year_selector')),
+        findsOneWidget); // Year selector
+    expect(find.byKey(const Key('monthly_chart')),
+        findsOneWidget); // Monthly chart
+    expect(find.byKey(const Key('category_selector')),
+        findsOneWidget); // Category selector
+    expect(find.byKey(const Key('expense_cards_list')),
+        findsOneWidget); // List of expense cards
   });
 }

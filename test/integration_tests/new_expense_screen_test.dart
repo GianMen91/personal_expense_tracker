@@ -57,7 +57,8 @@ void main() {
       expect(find.byKey(const Key('amount_input_field')), findsOneWidget);
       expect(find.byKey(const Key('description_input_field')), findsOneWidget);
       expect(find.byKey(const Key('date_picker_input_field')), findsOneWidget);
-      expect(find.byType(CategoryItem), findsOneWidget); // Category selection widget
+      expect(find.byType(CategoryItem),
+          findsOneWidget); // Category selection widget
       expect(find.byKey(const Key('save_button')), findsOneWidget);
     });
 
@@ -79,7 +80,7 @@ void main() {
 
       // Assert that the save button is enabled
       final saveButton =
-      tester.widget<ElevatedButton>(find.byKey(const Key('save_button')));
+          tester.widget<ElevatedButton>(find.byKey(const Key('save_button')));
       expect(saveButton.enabled, isTrue);
     });
   });

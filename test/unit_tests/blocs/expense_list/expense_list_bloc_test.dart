@@ -90,7 +90,8 @@ void main() {
         predicate<ExpensesListState>((state) {
           return state.isLoading == false &&
               state.expenses.length == 3 && // 3 expenses loaded
-              state.groupedExpenses.containsKey('Today') && // Today's expenses grouped
+              state.groupedExpenses
+                  .containsKey('Today') && // Today's expenses grouped
               state.monthlyTotal > 0; // There should be a monthly total
         }),
       ],
@@ -115,7 +116,7 @@ void main() {
         predicate<ExpensesListState>((state) => state.isLoading == true),
         // State when error occurs
         predicate<ExpensesListState>((state) =>
-        state.isLoading == false &&
+            state.isLoading == false &&
             state.errorMessage == 'Exception: Database error'), // Error message
       ],
     );
@@ -130,12 +131,14 @@ void main() {
             .thenAnswer((_) async => testExpenses);
         return bloc;
       },
-      act: (bloc) => bloc.add(AddExpense(testExpenses[0])), // Add the first test expense
+      act: (bloc) => bloc.add(AddExpense(testExpenses[0])),
+      // Add the first test expense
       expect: () => [
         // State after adding the new expense
         predicate<ExpensesListState>((state) =>
-        state.expenses.length == 3 && // New expense added
-            state.groupedExpenses.containsKey('Today')), // Today's expenses grouped
+            state.expenses.length == 3 && // New expense added
+            state.groupedExpenses.containsKey('Today')),
+        // Today's expenses grouped
       ],
       verify: (_) {
         // Verify that both addExpense and getExpenses were called
@@ -151,16 +154,18 @@ void main() {
         // Mock the database helper methods for deleting and fetching expenses
         when(() => mockDbHelper.deleteExpense(any()))
             .thenAnswer((_) async => 1);
-        when(() => mockDbHelper.getExpenses())
-            .thenAnswer((_) async => testExpenses.sublist(1)); // Remove the first expense
+        when(() => mockDbHelper.getExpenses()).thenAnswer(
+            (_) async => testExpenses.sublist(1)); // Remove the first expense
         return bloc;
       },
-      act: (bloc) => bloc.add(DeleteExpense(testExpenses[0])), // Delete the first test expense
+      act: (bloc) => bloc.add(DeleteExpense(testExpenses[0])),
+      // Delete the first test expense
       expect: () => [
         // State after deleting the expense
         predicate<ExpensesListState>((state) =>
-        state.expenses.length == 2 && // One expense removed
-            !state.groupedExpenses.containsKey('Today')), // Today's expense should be removed
+            state.expenses.length == 2 && // One expense removed
+            !state.groupedExpenses.containsKey('Today')),
+        // Today's expense should be removed
       ],
       verify: (_) {
         // Verify that both deleteExpense and getExpenses were called

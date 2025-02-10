@@ -39,7 +39,8 @@ void main() {
   group('ExpenseFormBloc Tests', () {
     test('should not submit form when invalid', () {
       // Arrange
-      final expenseCategory = ExpenseCategories.categories[0]; // Use a sample category
+      final expenseCategory =
+          ExpenseCategories.categories[0]; // Use a sample category
 
       // Mock the validation service to return false for invalid data
       when(mockValidationService.isValidExpense('', null)).thenReturn(false);
@@ -55,7 +56,8 @@ void main() {
       expenseFormBloc.add(FormSubmitted(expenseCategory));
 
       // Assert: Verify that the ExpensesListBloc's add method is never called (form should not be submitted)
-      verifyNever(mockExpensesListBloc.add(any)); // No expense should be added due to invalid form
+      verifyNever(mockExpensesListBloc
+          .add(any)); // No expense should be added due to invalid form
     });
   });
 }
