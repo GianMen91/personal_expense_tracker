@@ -10,46 +10,52 @@ import 'package:mockito/annotations.dart';
 
 import 'expense_form_bloc_test.mocks.dart';
 
-// Generate mocks for dependencies
+// Generate mocks for dependencies (ExpenseValidationService and ExpensesListBloc)
 @GenerateMocks([ExpenseValidationService, ExpensesListBloc])
 void main() {
+  // Declare the necessary mock objects and ExpenseFormBloc
   late ExpenseFormBloc expenseFormBloc;
   late MockExpenseValidationService mockValidationService;
   late MockExpensesListBloc mockExpensesListBloc;
 
+  // Setup before each test
   setUp(() {
+    // Initialize the mocks
     mockValidationService = MockExpenseValidationService();
     mockExpensesListBloc = MockExpensesListBloc();
+    // Create the ExpenseFormBloc with mocked dependencies
     expenseFormBloc = ExpenseFormBloc(
       validationService: mockValidationService,
       expensesBloc: mockExpensesListBloc,
     );
   });
 
+  // Clean up after each test
   tearDown(() {
     expenseFormBloc.close();
   });
 
+  // Group of tests related to ExpenseFormBloc
   group('ExpenseFormBloc Tests', () {
     test('should not submit form when invalid', () {
       // Arrange
+      final expenseCategory = ExpenseCategories.categories[0]; // Use a sample category
 
-      final expenseCategory = ExpenseCategories.categories[0];
-
+      // Mock the validation service to return false for invalid data
       when(mockValidationService.isValidExpense('', null)).thenReturn(false);
 
-      // Setting up invalid state
+      // Set up the ExpenseFormBloc's state to simulate an invalid form (no cost, invalid category)
       expenseFormBloc.emit(
         ExpenseFormState(
           date: DateTime(2025, 2, 10),
         ),
       );
 
-      // Act
+      // Act: Trigger the form submission event
       expenseFormBloc.add(FormSubmitted(expenseCategory));
 
-      // Assert
-      verifyNever(mockExpensesListBloc.add(any)); // Should not add expense
+      // Assert: Verify that the ExpensesListBloc's add method is never called (form should not be submitted)
+      verifyNever(mockExpensesListBloc.add(any)); // No expense should be added due to invalid form
     });
   });
 }
