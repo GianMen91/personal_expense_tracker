@@ -15,7 +15,8 @@ import '../widgets/bottom_menu.dart'; // Import bottom navigation menu widget
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final PageController _myPage = PageController(); // Controller for handling page navigation
+  final PageController _myPage =
+      PageController(); // Controller for handling page navigation
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +32,20 @@ class HomeScreen extends StatelessWidget {
             ),
             backgroundColor: const Color(0xFFF5F5F5), // Set background color
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(
             key: const Key('add_expense_button'),
-            backgroundColor: kButtonColor, // Set button color
-            shape: const CircleBorder(), // Circular shape
+            backgroundColor: kButtonColor,
+            // Set button color
+            shape: const CircleBorder(),
+            // Circular shape
             onPressed: () async {
-              await _showMyDialog(context); // Show the category selection dialog when clicked
+              await _showMyDialog(
+                  context); // Show the category selection dialog when clicked
             },
-            child: const Icon(Icons.add, color: Colors.white, size: 28), // Add icon
+            child: const Icon(Icons.add,
+                color: Colors.white, size: 28), // Add icon
           ),
           bottomNavigationBar: BottomMenu(
             myPage: _myPage,
@@ -47,14 +53,20 @@ class HomeScreen extends StatelessWidget {
             key: const Key('bottom_menu'),
           ),
           body: PageView(
-            controller: _myPage, // Control navigation between pages
+            controller: _myPage,
+            // Control navigation between pages
             onPageChanged: (int index) {
-              context.read<NavigationBloc>().add(ChangePage(index)); // Change page via BLoC
+              context
+                  .read<NavigationBloc>()
+                  .add(ChangePage(index)); // Change page via BLoC
             },
-            physics: const NeverScrollableScrollPhysics(), // Disable swipe navigation
+            physics: const NeverScrollableScrollPhysics(),
+            // Disable swipe navigation
             children: <Widget>[
-              ExpensesListScreen(key: const Key('expenses_list_screen')), // First tab: Expenses list
-              StatisticScreen(key: const Key('statistic_screen')), // Second tab: Statistics
+              ExpensesListScreen(key: const Key('expenses_list_screen')),
+              // First tab: Expenses list
+              StatisticScreen(key: const Key('statistic_screen')),
+              // Second tab: Statistics
             ],
           ),
         );

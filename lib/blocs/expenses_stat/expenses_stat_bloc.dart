@@ -43,9 +43,11 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
   List<Expense> getFilteredExpenses(
       List<Expense> expenses, ExpensesStatState state) {
     final filteredExpenses = expenses.where((expense) {
-      final isSameYear = expense.date.year == state.selectedDate.year; // Match year
+      final isSameYear =
+          expense.date.year == state.selectedDate.year; // Match year
       final isSameMonth = state.selectedMonth == null ||
-          DateFormat('MMM').format(expense.date) == state.selectedMonth; // Match month
+          DateFormat('MMM').format(expense.date) ==
+              state.selectedMonth; // Match month
       final isSameCategory = state.selectedCategory == "ALL" ||
           expense.category == state.selectedCategory; // Match category
       return isSameYear && isSameMonth && isSameCategory;
@@ -70,7 +72,8 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
     final filteredExpenses = expenses.where((expense) {
       final isSameYear = expense.date.year == selectedDate.year; // Match year
       final isSameMonth = selectedMonth == null ||
-          DateFormat('MMM').format(expense.date) == selectedMonth; // Match month
+          DateFormat('MMM').format(expense.date) ==
+              selectedMonth; // Match month
       return isSameYear && isSameMonth;
     }).toList();
 
@@ -82,7 +85,7 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
     for (final expense in filteredExpenses) {
       categoryTotals.update(
         expense.category,
-            (existingTotal) => existingTotal + expense.cost,
+        (existingTotal) => existingTotal + expense.cost,
         ifAbsent: () => expense.cost,
       );
     }
@@ -96,7 +99,8 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
         highestTotal = total;
         highestCategories = [category];
       } else if (total == highestTotal) {
-        highestCategories.add(category); // In case of a tie, add all matching categories
+        highestCategories
+            .add(category); // In case of a tie, add all matching categories
       }
     });
 
@@ -115,7 +119,8 @@ class ExpensesStatBloc extends Bloc<ExpensesStatEvent, ExpensesStatState> {
 
     // Calculate the total spending per month.
     for (var expense in expenses) {
-      if (expense.date.year == selectedDate.year) { // Match the selected year
+      if (expense.date.year == selectedDate.year) {
+        // Match the selected year
         final month = DateFormat('MMM').format(expense.date);
         monthlyData[month] = monthlyData[month]! + expense.cost;
       }

@@ -36,7 +36,8 @@ class CategorySelector extends StatelessWidget {
             },
             child: CategoryPill(
                 key: const Key('category_pill'),
-                title: category, isSelected: category == selectedCategory),
+                title: category,
+                isSelected: category == selectedCategory),
           );
         },
       ),

@@ -102,7 +102,8 @@ class ExpensesListBloc extends Bloc<ExpensesListEvent, ExpensesListState> {
 
     // Sort each group (same-day expenses) from most recent to oldest
     groupedExpenses.forEach((key, list) {
-      list.sort((a, b) => b.date.compareTo(a.date)); // Sort expenses within the same day
+      list.sort((a, b) =>
+          b.date.compareTo(a.date)); // Sort expenses within the same day
     });
 
     // Sort grouped expenses by date, from most recent to oldest.

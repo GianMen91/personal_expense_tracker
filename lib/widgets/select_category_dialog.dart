@@ -26,7 +26,10 @@ class SelectCategoryDialog extends StatelessWidget {
             final category = ExpenseCategories.categories[index];
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: CategoryItem(category: category,key: const Key('category_item'),),
+              child: CategoryItem(
+                category: category,
+                key: const Key('category_item'),
+              ),
             );
           },
         ),
@@ -43,7 +46,8 @@ class SelectCategoryDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-            child: const Text('CANCEL',key: Key('cancel_button_text'),
+            child: const Text('CANCEL',
+                key: Key('cancel_button_text'),
                 style: TextStyle(fontSize: 18, color: Colors.white)),
             onPressed: () {
               Navigator.of(context).pop();

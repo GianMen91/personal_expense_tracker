@@ -12,27 +12,37 @@ import 'models/expense_validation_service.dart';
 
 void main() {
   runApp(
+    // Using MultiBlocProvider to provide multiple BLoCs throughout the app
     MultiBlocProvider(
       providers: [
+        // Bloc for managing the list of expenses
         BlocProvider(
           create: (context) =>
               ExpensesListBloc(DatabaseHelper.instance)..add(LoadExpense()),
+          // Immediately dispatches LoadExpense event to fetch initial expenses
         ),
+
+        // Bloc for handling statistical calculations and filtering for expenses
         BlocProvider(
-          create: (context) =>
-              ExpensesStatBloc(),
+          create: (context) => ExpensesStatBloc(),
         ),
+
+        // Bloc for handling bottom navigation state management
         BlocProvider(
           create: (context) => NavigationBloc(),
         ),
+
+        // Bloc for managing expense form validation and submission
         BlocProvider(
           create: (context) => ExpenseFormBloc(
             validationService: ExpenseValidationService(),
-            expensesBloc: context.read<ExpensesListBloc>(),
+            // Injects validation service
+            expensesBloc: context
+                .read<ExpensesListBloc>(), // Connects with ExpensesListBloc
           ),
         ),
       ],
-      child: const PersonalExpenseTrackerApp(),
+      child: const PersonalExpenseTrackerApp(), // Main application widget
     ),
   );
 }

@@ -14,15 +14,19 @@ class DatabaseHelper {
 
   // Lazy loading of the database: Returns the existing database if available, otherwise initializes it.
   Future<Database> get database async {
-    if (_database != null) return _database!; // Return existing database if it exists
-    _database = await _initDB('personal_expense_tracker.db'); // Initialize the database if it doesn't exist
+    if (_database != null)
+      return _database!; // Return existing database if it exists
+    _database = await _initDB(
+        'personal_expense_tracker.db'); // Initialize the database if it doesn't exist
     return _database!;
   }
 
   // Initializes the database by opening it at the given file path and calling _createDB if it doesn't exist.
   Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath(); // Get the default path for the database
-    final path = join(dbPath, filePath); // Join the path with the database filename
+    final dbPath =
+        await getDatabasesPath(); // Get the default path for the database
+    final path =
+        join(dbPath, filePath); // Join the path with the database filename
 
     // Open the database, and create it if it doesn't exist, with version 1 and _createDB as the creation callback.
     return await openDatabase(
@@ -56,7 +60,8 @@ class DatabaseHelper {
   // Retrieves all expenses from the database.
   Future<List<Expense>> getExpenses() async {
     final db = await database; // Get the database instance
-    final List<Map<String, dynamic>> maps = await db.query('expense'); // Query all expenses from the table
+    final List<Map<String, dynamic>> maps =
+        await db.query('expense'); // Query all expenses from the table
     // Convert the list of maps to a list of Expense objects
     return List.generate(maps.length, (i) => Expense.fromMap(maps[i]));
   }

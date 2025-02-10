@@ -20,17 +20,18 @@ class ExpenseList extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(date, key: const Key('expense_date_text'),
+              child: Text(date,
+                  key: const Key('expense_date_text'),
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey[600])),
             ),
-            ExpenseCardsList(expenses: expenses, key: const Key('expense_card_list')),
+            ExpenseCardsList(
+                expenses: expenses, key: const Key('expense_card_list')),
           ],
         );
       },
     );
   }
 }
-
